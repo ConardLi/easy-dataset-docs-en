@@ -12,7 +12,7 @@ After text chunking is completed, the platform will call a large model to automa
 
 ### View Original Directory
 
-Switching to the Domain Tree tab, we can see the domain tree intelligently analyzed by AI based on the literature, as well as the original directory extracted from the literature:
+Switch to the Domain Tree tab, and you can see the domain tree intelligently analyzed by AI based on the literature, as well as the original directory extracted from the literature:
 
 <figure><img src="../../.gitbook/assets/image (68).png" alt=""><figcaption></figcaption></figure>
 

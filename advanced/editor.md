@@ -5,99 +5,99 @@ icon: pen-to-square
 # Text Spliting
 
 {% hint style="info" %}
-在很多应用场景里，文档分割都是极为关键的预处理环节。它的核心操作，就是把篇幅较长的文本拆解成一个个较小的、便于处理的片段。这么做有不少好处，比如能让不同长度的文档都能以统一的方式进行处理，解决模型输入长度受限的问题，还能提升检索系统里文本表示的质量。分割文档的方法多种多样，每种都各有优势。
+In many application scenarios, document splitting is an extremely critical preprocessing step. Its core operation is to break down long texts into smaller, more manageable chunks. This approach has many benefits, such as enabling documents of different lengths to be processed in a unified way, solving the problem of model input length limitations, and improving the quality of text representation in retrieval systems. There are various methods for splitting documents, each with its own advantages.
 {% endhint %}
 
-在 Easy Dataset 中，通过 「设置 - 任务设置 - 分块设置」 可自定义设置文献处理时的不同分块策略。
+In Easy Dataset, you can customize different chunking strategies for literature processing through "Settings - Task Settings - Chunking Settings".
 
 <figure><img src="../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 
-### 为什么要做分块？
+### Why Chunk Text?
 
-文本分块的作用，就是把文档拆分成小片段，方便后续的应用程序使用，通过分块，我们可以：
+The purpose of text chunking is to split documents into small segments, making it easier for subsequent applications to use. Through chunking, we can:
 
-* **解决文档长度不一致的问题**：实际的文档库中，文本的篇幅长短不一。通过分割，能保证所有文档都能以相同的方式进行处理。
-* **突破模型的限制**：不少模型都有最大输入长度的限制。把文档分割后，就可以处理那些原本因为太长而无法使用的文档。
-* **提升表示质量**：对于长文档而言，如果想一次性提取过多信息，提取质量就可能下降，而分割文档能让每个片段的表示更加精准、有针对性。
-* **提高检索的精准度**：在信息检索系统里，分割文档可以让搜索结果更细致，使查询内容能更精确地匹配到文档里相关的部分。
-* **优化计算资源的利用**：处理小片段文本更节省内存，而且还能更高效地并行处理任务。
+* **Solve the problem of inconsistent document lengths**: In real document libraries, text lengths vary. Splitting ensures that all documents can be processed in the same way.
+* **Break through model limitations**: Many models have a maximum input length limit. After splitting documents, those that were too long to use can now be processed.
+* **Improve representation quality**: For long documents, extracting too much information at once may reduce quality. Splitting allows each chunk to be more precise and targeted.
+* **Increase retrieval accuracy**: In information retrieval systems, splitting documents enables more granular search results, allowing queries to match relevant parts of documents more accurately.
+* **Optimize use of computing resources**: Processing small text chunks saves memory and allows for more efficient parallel task processing.
 
-### 固定长度分块
+### Fixed-Length Chunking
 
-最简单也是容易想到的分割策略，就是按照文档的长度来划分。这种方法简单又有效，能确保每个片段都不会超过设定的长度上限。基于长度分割的优势主要体现在这几个方面：实现起来简单易懂、分割出的片段长度比较一致、能很方便地根据不同模型的要求进行调整。基于长度的分割又可以细分为：
+The simplest and most intuitive splitting strategy is to divide by document length. This method is simple and effective, ensuring that each chunk does not exceed the set maximum length. The advantages of length-based splitting include being easy to implement and understand, producing chunks of relatively consistent length, and being easily adjustable for different model requirements. Length-based splitting can be further divided into:
 
-* **基于词元分割**：按照词元数量来分割文本，在和语言模型配合使用时非常实用。
-* **基于字符分割**：依据字符数量来分割文本，这种方式在不同类型的文本中都能保持较好的一致性。
+* **Token-based splitting**: Split text according to the number of tokens, which is very useful when working with language models.
+* **Character-based splitting**: Split text based on the number of characters, which maintains good consistency across different types of text.
 
 <figure><img src="../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
 
-选择固定长度分块时，可配置：
+When using fixed-length chunking, you can configure:
 
-1. **separator: "\n\n"：**&#x6307;定文本分割的边界标识，默认使用连续两个换行符（\n）作为分隔符。这意味着文本会在每个空行处被截断，将原始内容拆分为独立的段落块。例如，一篇包含多个空行分隔的文章会被按段落分割成多个子文本。通过调整分隔符（如改为 "\n" 或 "---"），可以灵活控制分割粒度，适用于不同格式的文本（如代码、Markdown文档等）。
-2. **chunkSize: 1000：**&#x5B9A;义每个分割块的最大字符长度上限。当文本被分隔符拆分后，若某个块的字符数超过此值，则会被进一步细分为更小的块，确保所有块均不超过指定大小。例如，一个包含3000字符的段落会被拆分为至少3个块（每个≤1000字符）。此参数直接影响后续处理的粒度：较小的值会生成更多、更精细的块，适合需要精确上下文的场景；较大的值则减少块数量，保留更完整的语义单元。
-3. **chunkOverlap: 200：**&#x63A7;制相邻分割块之间的重叠字符数。在每个块的末尾，会保留指定数量的字符作为与下一个块的重叠区域。例如，当 chunkOverlap: 200 时，前一个块的最后200个字符会重复出现在下一个块的开头。这种设计确保语义连续性，避免关键信息因分割被截断，尤其在依赖上下文的任务（如检索、问答）中至关重要。重叠区域作为过渡缓冲区，帮助模型在处理单个块时仍能获取相邻内容的上下文信息。
+1. **separator: "\n\n"**: Specifies the boundary marker for splitting text. By default, two consecutive line breaks (\n) are used as the separator. This means the text will be split at every blank line, breaking the original content into independent paragraph chunks. For example, an article with multiple blank lines will be split into several subtexts by paragraph. Adjusting the separator (such as changing to "\n" or "---") allows flexible control over the granularity of splitting, suitable for different text formats (such as code, Markdown documents, etc.).
+2. **chunkSize: 1000**: Defines the maximum character length for each chunk. After splitting by the separator, if a chunk exceeds this value, it will be further divided into smaller chunks, ensuring all chunks do not exceed the specified size. For example, a paragraph with 3000 characters will be split into up to 3 chunks (each ≤1000 characters). This parameter directly affects the granularity of subsequent processing: smaller values generate more, finer chunks suitable for scenarios requiring precise context; larger values reduce the number of chunks, retaining more complete semantic units.
+3. **chunkOverlap: 200**: Controls the number of overlapping characters between adjacent chunks. At the end of each chunk, a specified number of characters are retained as an overlap with the next chunk. For example, when chunkOverlap: 200, the last 200 characters of the previous chunk will be repeated at the beginning of the next chunk. This design ensures semantic continuity, preventing key information from being lost due to splitting, which is especially important for context-dependent tasks (such as retrieval and Q&A). The overlap area acts as a transition buffer, helping the model access the context of adjacent content when processing a single chunk.
 
 <figure><img src="../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-如果文档相对简单，没有明显的结构，建议采用此方案。
+If the document is relatively simple and lacks obvious structure, this solution is recommended.
 {% endhint %}
 
-### 文本结构分块
+### Text Structure Chunking
 
-文本自然地组织成段落、句子和单词等层次结构。我们可以利用这种内在结构来制定分割策略，使分割后的文本保持自然语言的流畅性，在分割块内保持语义连贯，并适应不同程度的文本粒度。首先分割器会试图保持较大的单元（如段落）完整。如果一个单元超过了块大小限制，它会进入下一个层次（如句子）。如有必要，这个过程会一直持续到单词级别。
+Text is naturally organized into hierarchical structures such as paragraphs, sentences, and words. We can leverage this inherent structure to formulate splitting strategies, ensuring that the chunked text maintains the fluency of natural language, semantic coherence within the chunk, and adapts to different levels of text granularity. The splitter will first try to keep larger units (such as paragraphs) intact. If a unit exceeds the chunk size limit, it will move to the next level (such as sentences). If necessary, this process will continue down to the word level.
 
-文本结构（递归）分块同样支持配置最大分块大小、重叠字符数，另外支持配置多个自定义分隔符：
+Recursive text structure chunking also supports configuring the maximum chunk size, overlap characters, and multiple custom separators:
 
 <figure><img src="../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-如果文献具备比较复杂的结构，需要设定多个不同的分隔符，建议采用此方案。
+If the literature has a relatively complex structure and requires multiple different separators, this solution is recommended.
 {% endhint %}
 
-### 文档结构分块
+### Document Structure Chunking
 
-基于 Markdown 的文档结构分块，是平台默认的分块策略：
+Markdown-based document structure chunking is the platform's default chunking strategy:
 
-* 首先需要设定文本块的最小、最大分割长度；
-* 然后自动对章节（比如 Markdown 里的 `#、##、###`）进行识别；
-* 对已识别到的章节字数进行计数，在恰好位于 > 最小分割长度 同时 < 最大分割长度的前提下进行分段；
-* 当遇到超长段落（超出最大分割长度）的时候，在执行递归分段算法，确保语义的完整性。
+* First, you need to set the minimum and maximum split lengths for the text block;
+* Then, automatically identify chapters (such as `#`, `##`, `###` in Markdown);
+* Count the number of words in the identified chapters, and split them into segments when the length is between the minimum and maximum split lengths;
+* When encountering overly long paragraphs (exceeding the maximum split length), recursively split the paragraphs to ensure semantic integrity.
 
 <figure><img src="../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-如果 Markdown 文件具有良好的结构划分，使用此方案可以获得最佳分块效果。
+If the Markdown file has a good structural division, using this scheme can achieve the best chunking effect.
 {% endhint %}
 
-### 代码结构分块
+### Code Structure Chunking
 
-当分块的目标中含有大量代码时，传统的分割方式都不适用，可能会对代码进行阶段，Easy Dataset 也提供了基于智能代码语意理解能力的分割方式，可以选择目标语言进行分块：
+When the target text contains a large amount of code, traditional splitting methods are not applicable, and may cause code fragmentation. Easy Dataset also provides a splitting method based on intelligent code semantic understanding, which can choose the target language for chunking:
 
 <figure><img src="../.gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
 
-### 可视化自定义分块
+### Visual Custom Chunking
 
-当以上分块策略均不能满足你的需求时，可选择使用可视化自定义分块功能，首先找到要分块的文献，点击查看详情：
+When the above chunking strategies cannot meet your needs, you can choose to use the visual custom chunking function. First, find the literature to be chunked and click to view details:
 
 <figure><img src="../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
 
-打开文件预览视图后，点击右上角开启自定义分块模式：
+After opening the file preview view, click the top right corner to enable custom chunking mode:
 
 <figure><img src="../.gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
 
-在需要分块的位置选中文本：
+Select the text at the position where you need to chunk:
 
 <figure><img src="../.gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
 
-上方将展示当前分块的位置、分块数量以及每个块的字符数：
+The top will display the current chunking position, chunk count, and character count for each chunk:
 
 <figure><img src="../.gitbook/assets/image (15).png" alt=""><figcaption></figcaption></figure>
 
-点击保存分块：
+Click to save the chunk:
 
 <figure><img src="../.gitbook/assets/image (16).png" alt=""><figcaption></figcaption></figure>
 
-保存后，将完全替换掉当前文献历史的分块内容：
+After saving, it will completely replace the current literature's historical chunking content:
 
 <figure><img src="../.gitbook/assets/image (96).png" alt=""><figcaption></figcaption></figure>

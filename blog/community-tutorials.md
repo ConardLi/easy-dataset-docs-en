@@ -4,15 +4,15 @@ icon: newspaper
 
 # Community Tutorials
 
-### 想微调特定领域的大模型，数据集要怎么搞？
+### How to prepare datasets for fine-tuning large models in specific domains?
 
 {% embed url="https://www.youtube.com/watch?v=C7euxRVw3JQ" %}
 
-### 如何将领域文献转成可供模型微调的数据集？
+### How to convert domain literature into datasets suitable for model fine-tuning?
 
 {% embed url="https://www.youtube.com/watch?v=usYzmXLvXXc" %}
 
-### Easy Dataset × LLaMA Factory: 让大模型高效学习领域知识
+### Easy Dataset × LLaMA Factory: Enabling Large Models to Efficiently Learn Domain Knowledge
 
 {% embed url="https://buaa-act.feishu.cn/wiki/KY9xwTGs1iqHrRkjXBwcZP9WnL9" %}
 

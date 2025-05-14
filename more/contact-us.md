@@ -4,21 +4,21 @@ icon: weixin
 
 # Contact Us
 
-### 用户交流
+### User Communication
 
-欢迎加入 code 秘密花园 AI 交流群，如果群聊过期，可加小助理微信：codemmhy 备注 AI 拉你进群：
+You are welcome to join the Code Secret Garden AI group chat. If the group chat link has expired, you can add our assistant on WeChat: codemmhy (remark "AI" to be invited into the group):
 
 <figure><img src="../.gitbook/assets/image (97).png" alt="" width="375"><figcaption></figcaption></figure>
 
-### 问题反馈
+### Feedback
 
-请通过 [https://github.com/ConardLi/easy-dataset/issues](https://github.com/ConardLi/easy-dataset/issues) 提交产品建议、问题反馈，注意请严格按照 Issue 模版进行提交，否则将可能不会得到回复。
+Please submit product suggestions and feedback via [https://github.com/ConardLi/easy-dataset/issues](https://github.com/ConardLi/easy-dataset/issues). Please make sure to strictly follow the Issue template; otherwise, you may not receive a reply.
 
 ***
 
-### 商务合作
+### Business Cooperation
 
-加微信：codemmhy ，备注商务合作（简要注明来意）。
+Add WeChat: codemmhy, and note "Business Cooperation" (please briefly state your purpose).
 
 ***
 
