@@ -5,44 +5,44 @@ icon: book
 # Document Processing
 
 {% hint style="info" %}
-此模块用于将多种格式的领域文献，处理为可供模型理解的数据结构。
+This module is used to process domain literature in various formats into data structures that can be understood by models.
 {% endhint %}
 
-### 文件类型
+### File Types
 
-目前平台支持 **Markdwon、PDF、DOCX、TXT** 四种格式的文献处理：
+Currently, the platform supports processing literature in four formats: **Markdown, PDF, DOCX, and TXT**:
 
 <figure><img src="../../.gitbook/assets/image (35).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="success" %}
-模型对于具备良好结构划分的 Markdown 文献理解效果最好，建议大家优先上传 Markdwon 文件。
+Models understand Markdown literature with good structural organization best. It is recommended to prioritize uploading Markdown files.
 {% endhint %}
 
-### PDF 处理
+### PDF Processing
 
-由于 PDF 格式相对特殊，平台针对不同场景支持了四种不同的 PDF 处理方式，当上传的文献中含有 PDF 格式的文献时，会触发弹框：
+Due to the special nature of PDF format, the platform supports four different PDF processing methods for different scenarios. When literature containing PDF format is uploaded, a dialog box will appear:
 
 <figure><img src="../../.gitbook/assets/image (37).png" alt=""><figcaption></figcaption></figure>
 
-#### 基础解析
+#### Basic Parsing
 
-专注于快速识别简单 PDF 文件的关键轮廓，处理规整纯文本报告、简单说明文档等效率高，但无法精准解析含大量公式、图表等复杂内容的文件。
+Focuses on quickly identifying key outlines of simple PDF files. It is efficient for processing well-structured plain text reports and simple documentation, but cannot accurately parse files containing complex content such as large numbers of formulas and charts.
 
-#### MinerU API 解析
+#### MinerU API Parsing
 
-可通过 「设置 - 任务设置」 配置 MinerU API Key，调用 MinerU API 进行解析，可深度解析含公式、图表的复杂 PDF 文件，适用于学术论文、技术报告等场景，文件越复杂处理速度越慢。可以通过 [https://mineru.net/apiManage/token](https://mineru.net/apiManage/token) 申请 MinerU API Key（注意有效期为 14 天，过期需重新申配置）。
+You can configure the MinerU API Key through "Settings - Task Settings" to call the MinerU API for parsing. It can deeply parse complex PDF files containing formulas and charts, suitable for academic papers, technical reports, and other scenarios. The more complex the file, the slower the processing speed. You can apply for a MinerU API Key through [https://mineru.net/apiManage/token](https://mineru.net/apiManage/token) (note that the validity period is 14 days, after which you need to reconfigure).
 
 <figure><img src="../../.gitbook/assets/image (31).png" alt=""><figcaption></figcaption></figure>
 
-#### MinerU 在线平台解析
+#### MinerU Online Platform Parsing
 
-跳转至 MinerU 平台：[https://mineru.net/OpenSourceTools/Extractor](https://mineru.net/OpenSourceTools/Extractor) ，用户可在此平台解析 PDF，并下载 Markdwon 文件，再回平台重新上传。
+Redirects to the MinerU platform: [https://mineru.net/OpenSourceTools/Extractor](https://mineru.net/OpenSourceTools/Extractor), where users can parse PDFs and download Markdown files, then return to the platform to re-upload them.
 
 <figure><img src="../../.gitbook/assets/image (39).png" alt=""><figcaption></figcaption></figure>
 
-#### 自定义视觉模型解析
+#### Custom Vision Model Parsing
 
-可以识别复杂的 PDF 文件，包括公式和图表。该方式要求在模型配置中添加视觉模型配置，通过自定义的视觉模型来实现对 PDF 文件的解析。可以根据具体需求定制解析规则和模型参数，以适应不同类型的复杂 PDF 文件。
+Can recognize complex PDF files, including formulas and charts. This method requires adding vision model configuration in the model configuration to parse PDF files through a custom vision model. Parsing rules and model parameters can be customized according to specific needs to adapt to different types of complex PDF files.
 
 <figure><img src="../../.gitbook/assets/image (38).png" alt=""><figcaption></figcaption></figure>
 

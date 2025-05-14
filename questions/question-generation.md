@@ -5,53 +5,53 @@ icon: comments-question-check
 # Question Generation
 
 {% hint style="info" %}
-从分割好的文本块中提取问题，并为问题建立领域标签。
+Extract questions from the split text blocks and establish domain tags for the questions.
 {% endhint %}
 
-### 单个文本块生成问题
+### Generate Questions from a Single Text Block
 
 <figure><img src="../.gitbook/assets/image (71).png" alt=""><figcaption></figcaption></figure>
 
-任务完成后，可在文本块中查看已经生成好的问题。
+After the task is completed, you can view the generated questions in the text block.
 
 <figure><img src="../.gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
 
-可对已生成问题的文本块、未生成问题的文本块进行筛选：
+You can filter text blocks with generated questions and text blocks without generated questions:
 
 <figure><img src="../.gitbook/assets/image (19).png" alt=""><figcaption></figcaption></figure>
 
-### 批量生成问题
+### Batch Question Generation
 
-可批量、全选文本块，并批量构造问题：
+You can batch select or select all text blocks, and construct questions in batch:
 
 <figure><img src="../.gitbook/assets/image (25).png" alt=""><figcaption></figcaption></figure>
 
-可以实时查看批量任务的进度：
+You can view the progress of batch tasks in real-time:
 
 <figure><img src="../.gitbook/assets/image (26).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-当批量任务进行中，关闭、刷新当前页面都会中断任务，可以开一个新页面到问题管理查看已经生成的问题。
+When a batch task is in progress, closing or refreshing the current page will interrupt the task. You can open a new page to check the already generated questions in question management.
 {% endhint %}
 
-### 问题生成配置
+### Question Generation Configuration
 
-每个文本块生成多少问题，是由 「项目设置 - 任务设置」 里的生成问题的最大长度决定的，默认设置是每 240 个字符生成一个问题，大家 2000 字符左右的文本块生成了 8 个问题，大家可以根据自己文献的信息密度来灵活调整：
+How many questions are generated for each text block is determined by the maximum length for generating questions in "Project Settings - Task Settings". The default setting is to generate one question per 240 characters. For text blocks of around 2000 characters, about 8 questions will be generated. You can flexibly adjust this according to the information density of your literature:
 
 <figure><img src="../.gitbook/assets/image (28).png" alt=""><figcaption></figcaption></figure>
 
-还可以控制生成的问题中消除 ？的比例（默认将消除 60%）。
+You can also control the proportion of question marks (?) to be removed in the generated questions (default will remove 60%).
 
 <figure><img src="../.gitbook/assets/image (29).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="success" %}
-在实际问答任务中，用户的问题并不总是会携带 ？消除一定比低的 ？ 有助于提升微调效果
+In actual Q&A tasks, users' questions do not always include question marks. Removing a certain percentage of question marks helps improve fine-tuning effects.
 {% endhint %}
 
-可以控制批量任务中的最大并发数量，（默认最大并发 5 个任务）。
+You can control the maximum number of concurrent tasks in batch tasks (default maximum concurrency is 5 tasks).
 
 <figure><img src="../.gitbook/assets/image (30).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="danger" %}
-注意，部分模型提供商会对最大并发数量进行限制，调整过大的值可能导致批量任务失败，建议灵活测试调整。
+Note that some model providers will limit the maximum number of concurrent tasks. Setting too large a value may cause batch tasks to fail. It is recommended to flexibly test and adjust.
 {% endhint %}

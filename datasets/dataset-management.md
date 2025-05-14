@@ -5,49 +5,49 @@ icon: table
 # Dataset Management
 
 {% hint style="info" %}
-对已生成的数据集进行确认、过滤、修订、优化，保障最终导出符合需求的高质量数据集。
+Confirm, filter, revise, and optimize generated datasets to ensure the final export meets requirements for high-quality datasets.
 {% endhint %}
 
-### 数据集列表
+### Dataset List
 
-查看所有已经生成的数据集，包括原始问题、创建时间、使用的模型、领域标签、是否含有思维链（COT）、答案摘要：
+View all generated datasets, including original questions, creation time, models used, domain tags, whether they contain chain of thought (COT), and answer summaries:
 
 <figure><img src="../.gitbook/assets/image (79).png" alt=""><figcaption></figcaption></figure>
 
-### 数据集详情
+### Dataset Details
 
-点击单条数据集，可查看数据集详情，包含问题、答案、思维链、使用模型、领域标签、创建时间、文本块：
+Click on a single dataset to view its details, including question, answer, chain of thought, model used, domain tags, creation time, and text block:
 
 <figure><img src="../.gitbook/assets/image (80).png" alt=""><figcaption></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/image (81).png" alt=""><figcaption></figcaption></figure>
 
-点击文本块名称，可查看原始文本块详情，方便对比原始内容和答案的差距：
+Click on the text block name to view the original text block details, making it convenient to compare the original content with the answer:
 
 <figure><img src="../.gitbook/assets/image (82).png" alt=""><figcaption></figcaption></figure>
 
-### 数据集修订
+### Dataset Revision
 
-若对于生成的答案、思维链不满意，可点击编辑按钮手动修改：
+If you are not satisfied with the generated answer or chain of thought, you can click the edit button to modify manually:
 
 <figure><img src="../.gitbook/assets/image (84).png" alt=""><figcaption></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/image (83).png" alt=""><figcaption></figcaption></figure>
 
-点击魔法棒图标，可向 AI 提供优化建议，基于 AI 进行优化：
+Click the magic wand icon to provide optimization suggestions to AI and optimize based on AI:
 
 <figure><img src="../.gitbook/assets/image (85).png" alt=""><figcaption></figcaption></figure>
 
-### 数据集确认
+### Dataset Confirmation
 
-确认数据集无问题，可点击确认保留：
+If you confirm that the dataset has no issues, you can click to confirm and keep it:
 
 <figure><img src="../.gitbook/assets/image (86).png" alt=""><figcaption></figcaption></figure>
 
-已确认的数据集将会被打上标签：
+Confirmed datasets will be labeled:
 
 <figure><img src="../.gitbook/assets/image (87).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="warning" %}
-注意：确认数据集不是必备操作，仅用于平台记录已确认的情况，不影响后续导出（**未确认的数据集也能导出**）。
+Note: Confirming datasets is not a mandatory operation. It is only used for the platform to record confirmed status and does not affect subsequent export (**unconfirmed datasets can also be exported**).
 {% endhint %}

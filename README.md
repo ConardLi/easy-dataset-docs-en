@@ -16,62 +16,62 @@ layout:
 # Product Introduction
 
 {% hint style="success" %}
-&#x20;                                                [**Easy Dataset**](https://github.com/ConardLi/easy-dataset) **是一个强大的大模型数据集创建工具。**
+&#x20;                                                [**Easy Dataset**](https://github.com/ConardLi/easy-dataset) **is a powerful large model dataset creation tool.**
 {% endhint %}
 
 <figure><img src=".gitbook/assets/bg2.png" alt=""><figcaption></figcaption></figure>
 
-### 为什么会有这个工具？
+### Why This Tool?
 
-目前各行各业都在积极探索微调自己行业的大模型，其实微调的过程不是难事，目前市面上也有比较多成熟的工具，比较难的是前期的数据集准备的环节，数据集的质量直接决定了模型微调后的效果，高质量领域数据集的构建始终面临多重挑战，大家在构建数据集的过程中可能会普遍遇到以下问题：
+Currently, various industries are actively exploring fine-tuning large models for their specific sectors. The fine-tuning process itself is not difficult, and there are many mature tools available in the market. The challenging part is the initial dataset preparation stage. The quality of the dataset directly determines the effectiveness of the model after fine-tuning. Building high-quality domain datasets consistently faces multiple challenges, and people generally encounter the following problems when building datasets:
 
 {% hint style="danger" %}
-* 完全不知道怎么做，目前就在纯人工去做，想提高效率
-* 直接将文档丢给 AI ，但是 AI 对于大文件生成的 QA 对效果比较差
-* AI 本身有上下文的限制，一次不能生成太多的问题，分批生成后面又会生成重复的问题
-* 已经有整理出来的数据集了，想有一个批量管理数据集的地方，可以进行标注和验证
-* 对于数据集有细分领域的需求，不知道如何去构建领域标签
-* 想要微调推理模型，但是不知道推理微调数据集中的 COT 怎么构造
-* 想从一个格式的数据集转换成另一个格式的数据集，不知道怎么转换
+* Complete lack of knowledge on how to proceed, currently doing everything manually and wanting to improve efficiency
+* Directly giving documents to AI, but AI performs poorly when generating Q&A pairs for large files
+* AI has context limitations, cannot generate too many questions at once, and generates duplicate questions when done in batches
+* Already have compiled datasets but want a place to manage them in bulk for annotation and validation
+* Have specific domain requirements for datasets but don't know how to build domain tags
+* Want to fine-tune reasoning models but don't know how to construct Chain-of-Thought (COT) in the fine-tuning dataset
+* Want to convert from one dataset format to another but don't know how to do the conversion
 {% endhint %}
 
-为了解决这些问题，**Easy DataSet 应运而生**，通过系统性解决方案实现从文献解析到数据集构造、标注、导出、评估的全流程闭环，以下是工具预期要解决的问题：
+To solve these problems, **Easy DataSet was created**, providing a systematic solution that implements a complete closed-loop from literature parsing to dataset construction, annotation, export, and evaluation. Below are the problems the tool aims to solve:
 
 {% hint style="success" %}
-* 能够支持多种文献处理，将各种格式的文献处理为模型可理解的格式
-* 能够做到基于 AI 辅助生成数据集，而且不丢失准确性
-* 能够解决由于模型上下文限制导致的截断问题
-* 能够批量构造数据集，能生成 COT，而且不生成重复的数据集，
-* 能够构建领域标签，并且按照领域树组织数据集
-* 能够合理的管理数据集，方便对数据集进行质量校验等操作
-* 能够方便的对生成的数据集进行格式转换，比如 Alpaca 和 ShareGPT 格式
-* 能够基于数据集对模型进行有效评估
+* Support multiple literature processing methods to convert various formats of literature into formats that models can understand
+* Achieve AI-assisted dataset generation without losing accuracy
+* Solve truncation problems caused by model context limitations
+* Construct datasets in bulk, generate COT, and avoid generating duplicate datasets
+* Build domain tags and organize datasets according to domain trees
+* Effectively manage datasets for quality verification and other operations
+* Easily convert generated datasets into different formats, such as Alpaca and ShareGPT formats
+* Effectively evaluate models based on datasets
 {% endhint %}
 
-### 设计思路
+### Design Approach
 
-Easy DataSet 以 **项目制** 为核心单元，贯穿 「文献处理-问题生成-答案构建-标签管理-数据导出」 全链路：
+Easy DataSet uses a **project-based** approach as its core unit, covering the entire chain from "literature processing-question generation-answer construction-tag management-data export":
 
 <figure><img src=".gitbook/assets/image (63).png" alt=""><figcaption></figcaption></figure>
 
-### 核心模块
+### Core Modules
 
-* **模型配置中心**：支持 OpenAI 格式 API（如 OpenAI、DeepSeek、各种三方模型提供商）及本地模型（Ollama），内置模型测试 Playground，支持多模型对比。
-* **智能文献处理**：采用  「章节感知递归分块」 算法，基于 Markdown 结构实现语义级分割，确保单块内容完整（最小/最大长度可配），附带大纲提取与摘要生成。
-* **领域标签体系**：AI 自动生成二级领域树（如 「体育-足球」 ），支持手动修正，为每个 QA 对绑定精准标签，降低重复率。
-* **智能数据生成**：从领域信息中提取问题，基于问题 + 领域信息智能构造数据，并支持多维度数据标注、多格式数据导出。
-
-***
-
-### 数据引擎
-
-* **问题批量生成**：基于文本块语义，按字符密度动态生成问题（可配置），支持批量创建与中断恢复。
-* **答案智能构建**：关联原始文本块生成答案，支持推理模型（如DeepSeek-R1）生成带思维链（COT）的答案。
-* **质量校验机制**：提供问题/答案的批量删除、手动编辑及AI优化（输入指令自动润色），确保数据可用。
+* **Model Configuration Center**: Supports OpenAI format APIs (such as OpenAI, DeepSeek, various third-party model providers) and local models (Ollama), with built-in model testing Playground, supporting multi-model comparison.
+* **Intelligent Literature Processing**: Uses the "Section-Aware Recursive Chunking" algorithm, implements semantic-level segmentation based on Markdown structure, ensures complete content in each chunk (configurable minimum/maximum length), accompanied by outline extraction and summary generation.
+* **Domain Tag System**: AI automatically generates two-level domain trees (such as "Sports-Football"), supports manual correction, binds precise tags to each Q&A pair, reducing duplication rate.
+* **Intelligent Data Generation**: Extracts questions from domain information, intelligently constructs data based on questions + domain information, and supports multi-dimensional data annotation and multi-format data export.
 
 ***
 
-### 格式生态
+### Data Engine
 
-* **多格式导出**：支持 Alpaca、ShareGPT 标准格式，自定义字段映射，包含领域标签与 COT 信息。
-* **数据集广场**：聚合 HuggingFace、Kaggle 等多平台数据源，支持关键字一键检索，解决 「数据从哪来」 的初始难题。
+* **Batch Question Generation**: Based on text block semantics, dynamically generates questions according to character density (configurable), supports batch creation and interruption recovery.
+* **Intelligent Answer Construction**: Generates answers associated with original text blocks, supports reasoning models (such as DeepSeek-R1) to generate answers with Chain of Thought (COT).
+* **Quality Verification Mechanism**: Provides batch deletion, manual editing, and AI optimization (automatic polishing with input instructions) of questions/answers to ensure data usability.
+
+***
+
+### Format Ecosystem
+
+* **Multi-format Export**: Supports Alpaca, ShareGPT standard formats, custom field mapping, including domain tags and COT information.
+* **Dataset Marketplace**: Aggregates multiple platform data sources such as HuggingFace and Kaggle, supports one-click keyword search, solving the initial problem of "where to get data."

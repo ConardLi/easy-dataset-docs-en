@@ -5,73 +5,73 @@ icon: diagram-next
 # Task Configuration
 
 {% hint style="info" %}
-任务配置模块用于对文本处理、问题生成、任务并发等相关参数进行设置，以满足不同的任务需求。合理配置各项参数，能够有效提升任务执行效率和质量。
+The task configuration module is used to set parameters related to text processing, question generation, task concurrency, etc., to meet different task requirements. Properly configuring various parameters can effectively improve task execution efficiency and quality.
 {% endhint %}
 
-### 文本分割设置
+### Text Splitting Settings
 
 <figure><img src="../../.gitbook/assets/image (58).png" alt=""><figcaption></figcaption></figure>
 
-#### 1. 分割策略（Split Strategy）
+#### 1. Split Strategy
 
-文本分割基于设置的长度范围进行操作，将输入文本按照规则分割成合适的段落，以便后续处理。
+Text splitting operates based on the set length range, dividing input text according to rules into appropriate paragraphs for subsequent processing.
 
-#### 2. 最小长度（Minimum Length）
+#### 2. Minimum Length
 
-* 功能：设定分割后每个文本片段的最小字符长度，当前默认值为 1500。若某段文本长度小于该值，会与相邻文本段合并，直至满足最小长度要求。
-* 设置方法：在 “Minimum Length” 后的输入框中输入期望的数值（需为正整数）。
+* Function: Sets the minimum character length for each text fragment after splitting, with a current default value of 1500. If a text segment is shorter than this value, it will be merged with adjacent text segments until it meets the minimum length requirement.
+* Setting method: Enter the desired value (must be a positive integer) in the input box after "Minimum Length".
 
 {% hint style="warning" %}
-数值不宜过大，否则可能导致文本片段数量过少，影响后续处理的灵活性；也不宜过小，避免文本片段过于零碎。
+The value should not be too large, as it may result in too few text fragments, affecting the flexibility of subsequent processing; it should also not be too small, to avoid text fragments being too fragmented.
 {% endhint %}
 
-#### 3. 最大分割长度（Maximum Split Length）
+#### 3. Maximum Split Length
 
-* 功能：限制分割后每个文本片段的最大字符长度，当前默认值为 2000。超过该长度的文本会被分割成多个片段。
-* 设置方法：在 “Maximum Split Length” 后的输入框中输入合适的数值（需为正整数且大于最小长度值）。
+* Function: Limits the maximum character length of each text fragment after splitting, with a current default value of 2000. Text exceeding this length will be split into multiple fragments.
+* Setting method: Enter an appropriate value (must be a positive integer and greater than the minimum length value) in the input box after "Maximum Split Length".
 
-### 问题生成设置
+### Question Generation Settings
 
 <figure><img src="../../.gitbook/assets/image (59).png" alt=""><figcaption></figcaption></figure>
 
-#### 1. 问题生成长度（Question Generation Length）
+#### 1. Question Generation Length
 
-* 功能：设定生成问题的最大字符长度，当前默认值为 240。确保生成的问题在合理长度范围内，便于阅读和理解。
-* 设置方法：在 “Question Generation Length” 后的输入框中输入期望的数值（需为正整数）。
+* Function: Sets the maximum character length for generated questions, with a current default value of 240. Ensures that generated questions are within a reasonable length range for easy reading and understanding.
+* Setting method: Enter the desired value (must be a positive integer) in the input box after "Question Generation Length".
 
-#### 2. 移除问号概率（Removing Question Marks Probability）
+#### 2. Removing Question Marks Probability
 
-* 功能：设置生成问题时移除问号的概率，当前默认值为 60%。可根据具体需求调整问题格式。
-* 设置方法：在 “Removing Question Marks Probability” 后的输入框中输入 0 - 100 之间的整数（代表百分比概率）。
+* Function: Sets the probability of removing question marks when generating questions, with a current default value of 60%. The question format can be adjusted according to specific needs.
+* Setting method: Enter an integer between 0 and 100 (representing percentage probability) in the input box after "Removing Question Marks Probability".
 
-#### 3. 并发限制（Concurrency Limit）
+#### 3. Concurrency Limit
 
-* 功能：用于限制同时生成问题和生成数据集的任务数量，避免因任务过多占用过多系统资源，导致系统性能下降或任务失败。
-* 设置方法：根据系统资源情况和任务需求，设置合适的并发任务数量上限。具体操作可能需在相关设置界面找到对应的输入框或滑块进行调整（若存在）。
+* Function: Used to limit the number of simultaneous question generation and dataset generation tasks, avoiding system performance degradation or task failure due to too many tasks occupying too many system resources.
+* Setting method: Set an appropriate upper limit for concurrent tasks based on system resource conditions and task requirements. Specific operations may require finding the corresponding input box or slider in the relevant settings interface (if available).
 
 {% hint style="warning" %}
-设置时需考虑服务器的硬件性能、网络带宽等因素，若并发任务过多，可能导致任务排队等待时间过长，甚至出现任务超时失败的情况。
+When setting, consider factors such as server hardware performance and network bandwidth. If there are too many concurrent tasks, it may lead to long task queue waiting times or even task timeout failures.
 {% endhint %}
 
-### PDF 转换配置
+### PDF Conversion Configuration
 
 <figure><img src="../../.gitbook/assets/image (60).png" alt=""><figcaption></figcaption></figure>
 
-#### 1. **MinerU Token 配置**
+#### 1. **MinerU Token Configuration**
 
-* 功能：MinerU Token 用于基于 MinerU AIP 转换 PDF 的身份验证和授权。
-* 设置方法：在对应的输入框中输入有效的 MinerU Token。需注意，MinerU Token 有效期仅为 14 天，过期后需及时更换新的 Token 以保证功能正常使用。
+* Function: MinerU Token is used for authentication and authorization for PDF conversion based on MinerU API.
+* Setting method: Enter a valid MinerU Token in the corresponding input box. Note that the MinerU Token is only valid for 14 days, and a new Token needs to be replaced promptly after expiration to ensure normal function use.
 
-#### 2. 自定义大规模视觉模型并发限制
+#### 2. Custom Large-Scale Vision Model Concurrency Limit
 
-* 功能：限制自定义大规模视觉模型相关任务的并发数量，合理分配系统资源，保障模型处理任务的稳定性和效率。
-* 设置方法：根据模型的计算复杂度和系统资源情况，谨慎设置并发限制，过高可能导致系统负载过大，过低则可能无法充分利用系统资源。
+* Function: Limits the number of concurrent tasks related to custom large-scale vision models, reasonably allocates system resources, and ensures the stability and efficiency of model processing tasks.
+* Setting method: Carefully set concurrency limits based on the computational complexity of the model and system resource conditions. Too high may lead to excessive system load, while too low may not fully utilize system resources.
 
-### 数据集上传设置
+### Dataset Upload Settings
 
 <figure><img src="../../.gitbook/assets/image (61).png" alt=""><figcaption></figcaption></figure>
 
 #### 1. Hugging Face Token
 
-* 功能：Hugging Face Token 用于在与 Hugging Face 平台交互时进行身份验证，实现数据集上传等功能（目前 Hugging Face 功能尚未实现，此 Token 设置暂时仅为预留）。
-* 设置方法：在 “hf\_” 后的输入框中输入 Hugging Face 平台生成的 Token。
+* Function: Hugging Face Token is used for authentication when interacting with the Hugging Face platform to implement functions such as dataset uploading (currently the Hugging Face function has not been implemented, this Token setting is temporarily reserved).
+* Setting method: Enter the Token generated by the Hugging Face platform in the input box after "hf_".

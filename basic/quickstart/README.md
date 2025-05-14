@@ -4,10 +4,10 @@ icon: futbol
 
 # Projects
 
-项目是 `Easy DataSet` 中的一个最小工作单元，一个项目下有一份独立的配置（包括数据集生成任务配置、模型配置等等），可以处理一批文献并且管理基于这批文献生成的所有问题和数据集。
+A project is the smallest work unit in `Easy DataSet`. Each project has its own independent configuration (including dataset generation task configuration, model configuration, etc.), and can process a batch of literature and manage all questions and datasets generated based on this batch of literature.
 
 <figure><img src="../../.gitbook/assets/image (56).png" alt=""><figcaption></figcaption></figure>
 
-创建新项目，只需要输入项目名称和描述，可复用其他项目的模型配置。
+To create a new project, you only need to input the project name and description, and you can reuse model configurations from other projects.
 
-> 名称和描述只用于记录和查看，不会影响后续的数据集生成任务。
+> The name and description are only used for recording and viewing, and will not affect subsequent dataset generation tasks.

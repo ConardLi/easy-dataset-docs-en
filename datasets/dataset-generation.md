@@ -4,53 +4,48 @@ icon: wand-magic-sparkles
 
 # Dataset Generation
 
-### 生成单个数据集
+### Generate a Single Dataset
 
-点击单个问题上的魔法棒🪄图标，为单个问题生成答案（构造数据集）：
+Click on the magic wand 🪄 icon on a single question to generate an answer (construct a dataset) for that question:
 
 <figure><img src="../.gitbook/assets/image (72).png" alt=""><figcaption></figcaption></figure>
 
-问题生成答案后，将在右侧展示已经生成答案的数量（单个问题可以生成多个答案）：
+After generating an answer for the question, the number of answers already generated will be displayed on the right side (a single question can generate multiple answers):
 
 <figure><img src="../.gitbook/assets/image (73).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-Easy DataSet 会根据问题 + 问题对应的文本块 + 领域标签来一起生成答案，来保障答案和文献本身的相关性。
+Easy DataSet generates answers based on the question + the text block corresponding to the question + domain tags together, to ensure the relevance of the answer to the literature itself.
 {% endhint %}
 
-当右上角选择的是推理模型时，将保留模型推理过程中的思维链（COT）：
+When a reasoning model is selected in the upper right corner, the chain of thought (COT) in the model's reasoning process will be preserved:
 
 <figure><img src="../.gitbook/assets/image (74).png" alt=""><figcaption></figcaption></figure>
 
-可以筛选已生成答案、未生成答案的问题：
+You can filter questions with generated answers and questions without generated answers:
 
 <figure><img src="../.gitbook/assets/image (75).png" alt=""><figcaption></figcaption></figure>
 
-### 批量生成数据集
+### Batch Generate Datasets
 
-可以多选、全选问题，批量生产答案：
+You can multi-select or select all questions to batch produce answers:
 
 <figure><img src="../.gitbook/assets/image (76).png" alt=""><figcaption></figcaption></figure>
 
-可以查看批量任务的进度：
+You can view the progress of batch tasks:
 
 <figure><img src="../.gitbook/assets/image (77).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-当批量任务进行中，关闭、刷新当前页面都会中断任务，可以开一个新页面到数据集管理查看已经生成的答案。
+When a batch task is in progress, closing or refreshing the current page will interrupt the task. You can open a new page to check the already generated answers in dataset management.
 {% endhint %}
 
-### 数据集生成配置
+### Dataset Generation Configuration
 
-在任务设置 - 问题生成设置中的并发任务数量，依然可以控制批量生成数据集的最大并发数量：
+The number of concurrent tasks in Task Settings - Question Generation Settings can still control the maximum number of concurrent tasks for batch dataset generation:
 
 <figure><img src="../.gitbook/assets/image (78).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-最大并发数量越大，数据集生成任务越快，反之越慢，注意模型提供商最大并发限制。
+The larger the maximum number of concurrent tasks, the faster the dataset generation task, and vice versa. Pay attention to the maximum concurrency limit of the model provider.
 {% endhint %}
-
-
-
-
-

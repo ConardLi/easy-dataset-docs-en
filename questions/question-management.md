@@ -5,25 +5,25 @@ icon: list-check
 # Question Management
 
 {% hint style="info" %}
-问题构造完成后，可对问题进行过滤和修订，可提升后续数据集的生成质量。
+After question construction is completed, questions can be filtered and revised to improve the quality of subsequent dataset generation.
 {% endhint %}
 
-### 列表视图
+### List View
 
-可查看问题名称、问题关联的领域标签、问题所属的文本块，可根据问题、标签名称筛选：
+You can view question names, domain tags associated with questions, and text blocks to which questions belong. You can filter by question and tag names:
 
 <figure><img src="../.gitbook/assets/image (95).png" alt=""><figcaption></figcaption></figure>
 
-支持编辑现有问题、新增自定义问题：
+Supports editing existing questions and adding custom questions:
 
 <figure><img src="../.gitbook/assets/image (33).png" alt=""><figcaption></figcaption></figure>
 
-### 领域树视图
+### Domain Tree View
 
-可以领域树视图查看每个领域标签下构造出的问题：
+You can use the domain tree view to see questions constructed under each domain tag:
 
 <figure><img src="../.gitbook/assets/image (34).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
-建议在这个模块删除质量较低的问题（比如跟文献的作者、标注等不相关的问题），避免后续构造出一些质量较低的数据集，并自定义添加好缺失的问题。
+It is recommended to delete low-quality questions in this module (such as questions irrelevant to the literature's author, annotations, etc.) to avoid constructing low-quality datasets later, and to add custom questions for any missing ones.
 {% endhint %}
