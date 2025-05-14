@@ -5,5 +5,5 @@ icon: tent-arrow-left-right
 # Distilled Datasets
 
 {% hint style="info" %}
-数据蒸馏模块支持零样本构造数据集，即将支持 ...
+The data distillation module supports zero-sample construction of datasets, which means it will support ...
 {% endhint %}

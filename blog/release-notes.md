@@ -5,150 +5,147 @@ icon: up
 # Release Notes
 
 {% hint style="info" %}
-同步：[https://github.com/ConardLi/easy-dataset/releases/](https://github.com/ConardLi/easy-dataset/releases/)
+Sync: [https://github.com/ConardLi/easy-dataset/releases/](https://github.com/ConardLi/easy-dataset/releases/)
 {% endhint %}
 
-### \[1.3.0-beta.1] 2025-05-06
+### [1.3.0-beta.1] 2025-05-06
 
-**本次更新在修复系统问题的基础上，对存储方式进行了重大优化，将本地文件存储重构为本地数据库存储，为提升大量数据下的使用体验带来大幅改进。由于此次改动较大，特发布 beta 版本供大家体验。如果大家在使用本版本过程中遇到任何问题，欢迎通过 Issues 提交反馈，帮助我们进一步完善产品。**
+**This update makes significant optimizations to the storage method, reconstructing local file storage as local database storage, greatly improving the user experience for large amounts of data. Due to the large changes made, a beta version is released for everyone to experience. If you encounter any issues while using this version, please submit feedback through Issues to help us further improve the product.**
 
-**🔧 修复**
+**🔧 Fixes**
 
-1. 修复数据集优化过程中意外生成 COT 的问题
-2. 修复了文本处理页上传时已移除文件仍被处理致报错的问题
+1. Fixed the issue of unexpectedly generating COT during dataset optimization
+2. Fixed the issue of processing removed files on the text processing page, causing errors
 
-**⚡ 优化**
+**⚡ Optimizations**
 
-1. 将本地文件存储重构为本地数据库存储，大幅优化大量数据下的使用体验
-2. 随机取出问题中的问号（支持配置）
-3. 优化多项功能使用体验
+1. Reconstructed local file storage as local database storage, greatly optimizing the user experience for large amounts of data
+2. Randomly removed question marks from problems (configurable)
+3. Optimized multiple functional experiences
 
-**✨ 新功能**
+**✨ New Features**
 
-1. 客户端新增本地日志存储，可打开日志目录排查问题
-2. 客户端新增清除缓存功能，可清理历史日志文件和备份的数据库文件
-
-***
-
-### \[1.2.5] 2025-04-13
-
-**🔧 修复**
-
-1. 修复第一次配置模型报错的问题
-2. 修复 Docker 打包镜像报错的问题
+1. Added local log storage to the client, allowing users to open the log directory to troubleshoot issues
+2. Added a cache clearing function to the client, allowing users to clear historical log files and backed-up database files
 
 ***
 
-### \[1.2.4] 2025-04-12
+### [1.2.5] 2025-04-13
 
-**⚡ 优化**
+**🔧 Fixes**
 
-1. 使用 OPEN AI SDK 对模型交互接口进行重构，提升兼容性
-
-**✨ 新功能**
-
-1. 支持视觉模型配置
-2. 支持使用自定义视觉模型解析 PDF，准确率更高
-3. 模型测试支持发送图片，对视觉模型进行测试
-4. 数据集详情页支持查看所属文本块
-5. 支持用户自己编辑文本块
-6. 支持下载和预览查看解析好的 Markdown 文件
+1. Fixed the issue of the model configuration error on the first configuration
+2. Fixed the issue of Docker image packaging errors
 
 ***
 
-### \[1.2.3] 2025-03-30
+### [1.2.4] 2025-04-12
 
-**⚡ 优化**
+**⚡ Optimizations**
 
-1. 增强模型默认最大输出 Token 限制
-2. 去除更新失败弹窗
-3. 去除部分干扰错误日志输出
+1. Used the OPEN AI SDK to reconstruct the model interaction interface, improving compatibility
 
-**✨ 新功能**
+**✨ New Features**
 
-1. 支持一键打开客户端数据目录
-2. 支持模型温度、最大生成 Token 数量配置
-3. 支持两种 PDF 文件解析（基础解析、MinerU 解析）
-4. 支持数据集导出 CSV 格式
-
-***
-
-### \[1.2.2] 2025-03-24
-
-**🔧 修复**
-
-1. 修复领域树视图下无法选中问题、删除问题失败的 Bug
-2. 修复升级新版本链接可能不准确的问题
-
-**⚡ 优化**
-
-1. 去除答案和思维链中多余的换行符
-2. 去除更新失败弹窗、更新下载最新安装包地址
-
-**✨ 新功能**
-
-1. 文献管理支持已生成、未生成问题的筛选
+1. Supported visual model configuration
+2. Supported using custom visual models to parse PDFs, with higher accuracy
+3. Model testing supported sending images to test visual models
+4. Dataset details page supported viewing belonging text blocks
+5. Supported users editing text blocks themselves
+6. Supported downloading and previewing parsed Markdown files
 
 ***
 
-### \[1.2.1] 2025-03-23
+### [1.2.3] 2025-03-30
 
-**🔧 修复**
+**⚡ Optimizations**
 
-1. 修复文本块排序不准确的问题
+1. Enhanced the default maximum output token limit of the model
+2. Removed the update failure pop-up window
+3. Removed some interfering error log outputs
 
-**⚡ 优化**
+**✨ New Features**
 
-1. 下调默认并发量为 3 （解决触发部分模型限流问题）
-2. 优化问题生成提示词，提升问题生成质量
-3. 下调最小分割字符数为 100，上调最大分割字符数为 10000
-4. 当模型未按标准格式输出时，日志增加原始输出信息
-
-**✨ 新功能**
-
-1. 支持编辑问题、自定义问题
-2. 支持数据集直接在 LLaMa Factory 中使用
-3. 支持配置用户自定义提示词
+1. Supported one-click opening of the client data directory
+2. Supported model temperature and maximum generated token number configuration
+3. Supported two types of PDF file parsing (basic parsing and MinerU parsing)
+4. Supported exporting datasets in CSV format
 
 ***
 
-### \[1.1.6] 2025-03-19
+### [1.2.2] 2025-03-24
 
-**🔧 修复**
+**🔧 Fixes**
 
-1. 修复 extractThinkChain 报错的问题
-2. 修复 NPM 依赖弃用问题
-3. 修复问题筛选，全选联动的问题
+1. Fixed the issue of unable to select problems and delete problems failing in the domain tree view
+2. Fixed the issue of the upgrade link to the new version possibly being inaccurate
 
-**⚡ 优化**
+**⚡ Optimizations**
 
-1. 优化上传多个文献时删除文献后重新构建领域树的操作
-2. 客户端打开后默认最大化，不再全屏
-3. 优化思维链内容，去除参考文献的话术
+1. Removed extra line breaks from answers and thought chains
+2. Removed the update failure pop-up window and the update download link for the latest installation package
+
+**✨ New Features**
+
+1. Literature management supported filtering generated and ungenerated problems
 
 ***
 
-### \[1.1.5] 2025-03-18
+### [1.2.1] 2025-03-23
 
-**🔧 修复**
+**🔧 Fixes**
 
-1. 修复缓存导致的项目列表为空的问题
-2. 修复问题分割字数配置不生效的问题
-3. 修复部分特殊文件名导致的报错问题
-4. 修复部分 Loading 状态失效的问题
+1. Fixed the issue of inaccurate text block sorting
 
-**⚡ 优化**
+**⚡ Optimizations**
 
-1. 客户端内打开外部链接，默认跳转浏览器
-2. 继续优化数据集结果生成的成功率
-3. 大量问题下领域树展示性能优化
+1. Lowered the default concurrency to 3 (solving the problem of triggering some model flow limits)
+2. Optimized problem generation prompts, improving problem generation quality
+3. Lowered the minimum split character number to 100 and raised the maximum split character number to 10000
+4. When the model did not output in the standard format, the log added the original output information
 
-**✨ 新功能**
+**✨ New Features**
 
-1. 新建项目时可选择复用其他项目的模型配置
-2. 单个项目支持上传多个文件（共享领域树）
-3. 问题管理增加已生成/未生成数据集的筛选
-4. 支持 docx 类型文件上传
+1. Supported editing problems and customizing problems
+2. Supported using datasets directly in LLaMa Factory
+3. Supported configuring user-defined prompts
 
+***
 
+### [1.1.6] 2025-03-19
 
+**🔧 Fixes**
+
+1. Fixed the issue of extractThinkChain errors
+2. Fixed the issue of NPM dependency deprecation
+3. Fixed the issue of problem filtering and full selection linkage
+
+**⚡ Optimizations**
+
+1. Optimized the operation of rebuilding the domain tree after deleting literature when uploading multiple literatures
+2. The client opened by default in maximized mode, no longer full-screen
+3. Optimized the content of thought chains, removing the rhetoric of reference literature
+
+***
+
+### [1.1.5] 2025-03-18
+
+**🔧 Fixes**
+
+1. Fixed the issue of the project list being empty due to caching
+2. Fixed the issue of the problem split character number configuration not taking effect
+3. Fixed the issue of some special file names causing errors
+4. Fixed the issue of some loading states being invalid
+
+**⚡ Optimizations**
+
+1. The client opened external links by default, jumping to the browser
+2. Continued to optimize the success rate of dataset result generation
+3. Optimized the performance of displaying domain trees for a large number of problems
+
+**✨ New Features**
+
+1. New projects could choose to reuse model configurations from other projects
+2. Single projects supported uploading multiple files (shared domain trees)
+3. Problem management added filtering for generated and ungenerated datasets
+4. Supported uploading docx type files

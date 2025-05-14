@@ -5,17 +5,17 @@ icon: billboard
 # Custom Prompts
 
 {% hint style="info" %}
-自定义提示词可主动干预问题、答案、领域标签生成的效果。
+Custom prompts can actively intervene in the generation of questions, answers, and domain labels.
 {% endhint %}
 
-例如，在下面的自定义提示词中，我们：
+For example, in the custom prompts below, we:
 
-* 通过自定义全局提示词要求必须使用英文
-* 通过自定义问题生成提示词要求问题必须保持精简
-* 通过自定义答案生成提示词要求答案必须风趣幽默
+* Use custom global prompts to require the use of English
+* Use custom question generation prompts to require questions to be concise
+* Use custom answer generation prompts to require answers to be humorous and witty
 
 <figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
-最终干预后的效果：
+The final effect after intervention:
 
 <figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>

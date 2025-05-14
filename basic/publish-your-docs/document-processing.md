@@ -46,48 +46,48 @@ Can recognize complex PDF files, including formulas and charts. This method requ
 
 <figure><img src="../../.gitbook/assets/image (38).png" alt=""><figcaption></figcaption></figure>
 
-当选择 MinerU API 解析、自定义视觉模型解析时，PDF 处理时间可能较长，请耐心等待：
+When choosing MinerU API parsing or custom vision model parsing, the PDF processing time may be longer, please wait patiently:
 
 <figure><img src="../../.gitbook/assets/image (43).png" alt=""><figcaption><p><br></p></figcaption></figure>
 
-可通过 「设置-任务设置」 配置自定义视觉模型的最大并发数量，及最多同时处理多少页 PDF，并发数量越大，处理速度也快，注意考虑模型提供商的并发量限制。
+You can configure the maximum number of concurrent custom vision models and the maximum number of pages to process simultaneously through "Settings - Task Settings". The more concurrent models, the faster the processing speed, but please consider the concurrency limit of the model provider.
 
 <figure><img src="../../.gitbook/assets/image (32).png" alt=""><figcaption></figcaption></figure>
 
-### 文本分块
+### Text Segmentation
 
-在选择好文件和处理方式，点击上传前，注意一定要提前在右上角选择模型，否则会导致处理失败：
+Before uploading, please select the model in the top right corner, otherwise, the processing will fail:
 
 <figure><img src="../../.gitbook/assets/image (42).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="warning" %}
-注意，这一步大家没必要选推理模型（比如 DeepSeek-R1），选择一个普通的问答模型比如豆包、千问都可以，在这一步推理模型并不会起到优势，而且会拖慢处理速度。
+Note that there is no need to select a reasoning model (such as DeepSeek-R1) in this step. Selecting a normal question-answering model, such as Doupai or Qianwen, is sufficient. Reasoning models will not provide any advantages in this step and will slow down the processing speed.
 {% endhint %}
 
-点击上传后，会将传入的文献进行了智能的文本分割，我们可以在分割列表里看到被拆分好的文本块，以及每个文本块的字数：
+After uploading, the platform will intelligently segment the text into blocks, and we can see the segmented text blocks and the number of characters in each block:
 
 <figure><img src="../../.gitbook/assets/image (44).png" alt=""><figcaption></figcaption></figure>
 
-可以查看每个文本块的详情：
+We can view the details of each text block:
 
 <figure><img src="../../.gitbook/assets/image (45).png" alt=""><figcaption></figcaption></figure>
 
-可以对每个文本块进行编辑：
+We can edit each text block:
 
 <figure><img src="../../.gitbook/assets/image (46).png" alt=""><figcaption></figcaption></figure>
 
-关于文本分块的原理，以及想自定义分块规则以适应不同的文献结构，可查看：《[自定义分块](../../advanced/editor.md)》 章节。
+For more information on the principles of text segmentation and how to customize segmentation rules to adapt to different literature structures, please refer to the "[Custom Segmentation](../../advanced/editor.md)" chapter.
 
-### 文献管理
+### Literature Management
 
-可以筛选指定文献已经生成的文本块：
+We can filter the text blocks generated for a specific literature:
 
 <figure><img src="../../.gitbook/assets/image (20).png" alt=""><figcaption></figcaption></figure>
 
-&#x20;可预览文献详情（转换为 Markdown），下载文献（Markdown），删除文献：
+We can preview the literature details (converted to Markdown), download the literature (Markdown), and delete the literature:
 
 <figure><img src="../../.gitbook/assets/image (23).png" alt=""><figcaption></figcaption></figure>
 
-预览文献：
+Preview the literature:
 
 <figure><img src="../../.gitbook/assets/image (24).png" alt=""><figcaption></figcaption></figure>
