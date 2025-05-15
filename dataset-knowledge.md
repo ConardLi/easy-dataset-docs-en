@@ -4,49 +4,49 @@ icon: book-atlas
 
 # Dataset Knowledge
 
-### 一、微调数据集的常见分类
+### I. Common Classifications of Fine-tuning Datasets
 
-很多同学弄不清楚，给模型喂的数据究竟需要什么样的格式，实际上就是还没分清楚几种常见的微调任务类型。为了在不同的业务场景下解决不同的问题，我们可能采取的微调任务类型是不一样的，那所用的数据集格式肯定也会有所差别。所以，为了弄清楚我们要整理什么样的数据集格式，先要搞清楚我们要做的微调属于哪种任务场景，下面是我梳理的对常见微调任务的一个分类图：
+Many people are confused about what format the data fed to the model should be in, which is actually because they haven't distinguished several common types of fine-tuning tasks. In order to solve different problems in different business scenarios, the types of fine-tuning tasks we may adopt are different, so the dataset formats used will also differ. Therefore, to clarify what kind of dataset format we need to organize, we first need to understand what kind of task scenario our fine-tuning belongs to. Below is a classification diagram of common fine-tuning tasks that I have sorted out:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=YmQzNjNhMWFmOWRhODg5M2UzZmQzODFjZDE4NGQ2MmZfWFFsTFM0VG9IMW93cFZMZ3ljZmVmVzhWSU5MbmYwZW5fVG9rZW46UVM3eWJoZERjb25hUFZ4WXg3NWNTWnZRbmZoXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
 ***
 
-#### 1.1 预训练
+#### 1.1 Pre-training
 
-从零开始训练一个模型，一般这个流程叫做预训练，这个过程的目的就是让模型掌握语言的通用规律，以及基本的语言理解能力。目前我们市面上主流的大模型，比如 `ChatGPT、DeepDeek` 等等，都属于 “自回归模型”，而 “自回归模型” 的本质就是：
+Training a model from scratch is generally called pre-training. The purpose of this process is to enable the model to master the general rules of language and basic language understanding capabilities. Currently, mainstream large models in the market, such as `ChatGPT, DeepDeek`, etc., are all "autoregressive models", and the essence of "autoregressive models" is:
 
-* **用过去的自己来预测未来的自己**。
+* **Using past self to predict future self**.
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=YWI4OGY3ODBlODFiYzhlZjM1YmU0N2VmOGZkNzVhZTBfeTRaT3dIWm1Db2Ftakp1OElpdmxUdUtwd3VROVF5SGNfVG9rZW46R0tFemJNa0p4b1FWMDR4NHJ4V2NCZkRUbktjXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-我们都知道，大模型输出文本的时候是按照 `Token` 来输出的。`Token` 简单理解就是把句子拆成最小语义单元（如中文拆字 / 词，英文拆词或子词）。回答被拆分出了 4 个 `Token`，每个 `Token` 都是根据前面的问题 + 已经输出的 `Token` 预测出来的。在预训练的数据集中，这些关键字出现在一起的次数越多，那模型输出的概率越大。所以我们的数据集越丰富，模型预测 `Token` 输出的准确率就越高，最终的输出效果也就更好。所以在预训练的过程中，我们一般用海量非结构化文本（比如书籍、网页、对话），通过「预测下一个词」来训练模型，这也就意味着预训练的数据集格式是没有明确要求的，例如下面这些数据我们可以直接用于训练：但是在特定领域的微调上，就不能用非结构化文本了，我们可以这样理解：
+We all know that when large models output text, they output according to `Token`. `Token` can be simply understood as breaking sentences into minimal semantic units (such as Chinese characters/words, English words or subwords). The answer is divided into 4 `Tokens`, each `Token` is predicted based on the previous question + already output `Tokens`. The more frequently these keywords appear together in the pre-training dataset, the greater the probability the model will output them. So the richer our dataset, the higher the accuracy of the model's prediction of `Token` output, and the better the final output effect. Therefore, in the pre-training process, we generally use massive unstructured text (such as books, web pages, conversations) to train the model by "predicting the next word", which means that there are no explicit requirements for the format of the pre-training dataset. For example, the following data can be used directly for training: But for fine-tuning in specific domains, unstructured text cannot be used. We can understand it this way:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=MTkzNzY3MmY0OWM4OWIxYzc4OWI4MGEyODhkNmQ5ZjFfampweXpadWVFUWxKSW80ZFhoOXpHSFZacUFyc3NjaG9fVG9rZW46QXg1TmJvblJjb0pTdHN4UW02b2N2VEx3bkpjXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-* **预训练阶段**：就像婴儿学说话，听到的是各种声音（非结构化），不管是什么，直接让他多听，慢慢多就能学会语言规律；
-* **指令微调阶段**：就像教小孩做事「听到问题要回答」，需要明确告诉他这是什么问题，正确答案是什么。如果继续用没规律（非结构化）对话，他对你要让他学的事情就不会印象太深刻。
+* **Pre-training stage**: Like a baby learning to speak, hearing various sounds (unstructured), regardless of what they are, just let them listen more, and gradually they will learn the rules of language;
+* **Instruction fine-tuning stage**: Like teaching a child what to do "when hearing a question, answer it", you need to clearly tell them what the question is and what the correct answer is. If you continue to use irregular (unstructured) conversation, they won't have a deep impression of what you want them to learn.
 
-而预训练的过程，我们可以理解成一个无需人工监督，自己学习和锻炼能力的过程，对应的，想要让模型具备特定的能力，就要用到监督微调了。
+And the pre-training process can be understood as a process of learning and developing abilities without human supervision. Correspondingly, if we want the model to have specific capabilities, supervised fine-tuning is needed.
 
 ***
 
-#### 1.2 监督微调
+#### 1.2 Supervised Fine-Tuning
 
-监督微调（`Supervised Fine-Tuning，SFT`），顾名思义就是需要人去监督微调的过程。比如：我们想训练一个中英翻译模型，把英文翻译为中文就是一个非常明确的需求场景，所以在数据集里只需要有输入、输出就可以了：
+Supervised Fine-Tuning (SFT), as the name suggests, requires human supervision during the fine-tuning process. For example: if we want to train an English-Chinese translation model, translating English to Chinese is a very clear demand scenario, so in the dataset, we only need to have input and output:
 
 ```json
 {"input": "Hello", "output": "你好"}
 ```
 
-**1.2.1 指令微调**
+**1.2.1 Instruction Fine-tuning**
 
-那假如我们想让模型具备多种语言理解的能力呢，这时候只靠两个字段就不够了，因为在 `Input` 是同样一个词语的时候，根据我们想让模型完成的不同任务，`output` 可能是不一样的，这时候我们就要多引入一个指令的概念，比如这个数据集：
+What if we want the model to have the ability to understand multiple languages? In this case, two fields alone are not enough, because when the `Input` is the same word, according to the different tasks we want the model to complete, the `output` may be different. At this time, we need to introduce the concept of instruction, such as this dataset:
 
 ```json
 [
   {
-    "instruction": "将这句英文翻译成法语",
+    "instruction": "Translate this English sentence into French",
     "input": "Hello, how are you?",
     "output": "Bonjour, comment ça va ?"
   },
@@ -54,24 +54,24 @@ icon: book-atlas
 ]
 ```
 
-我们告诉模型明确的指令：将英文翻译为法语，再将 `Input`（英文）、`Output`（法语）告诉模型， 模型就能准确理解要做什么了，这就是指令微调。指令微调常见的业务场景：
+We tell the model the clear instruction: translate English to French, and then tell the model the `Input` (English) and `Output` (French), so that the model can accurately understand what to do. This is instruction fine-tuning. Common business scenarios for instruction fine-tuning:
 
-* **智能教育**：实现作业辅导、规划个性化学习路径、辅助语言学习。
-* **智能办公**：可处理文档、邮件，进行日程管理。
-* **智能翻译**：应用于专业领域翻译、特定场景翻译及多语言交互。
-* **数据分析**：让模型根据分析需求指令，对数据进行准确解读和洞察。
+* **Intelligent Education**: Implement homework assistance, plan personalized learning paths, assist language learning.
+* **Intelligent Office**: Can handle documents, emails, and schedule management.
+* **Intelligent Translation**: Applied to professional field translation, specific scenario translation, and multilingual interaction.
+* **Data Analysis**: Let the model provide accurate interpretation and insights of data according to analysis requirement instructions.
 
-指令微调典型开源数据集（包含指令、输入、输出字段）：
+Typical open-source datasets for instruction fine-tuning (including instruction, input, output fields):
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2Q0MjVjZDQzODg5NjkxMzRiMDIwODAxMDg4MDIxYmNfWlVhZHRWRnlVTmhHeVpzYXhYNVk2UnFNbFB2dzRPNFFfVG9rZW46R2RITmI2a0dab2RQajB4VVBDN2NYMVJwblFlXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-> `Alpaca` 数据集：由斯坦福大学创建，通过微调模型生成，包含约 5.2 万个指令跟随数据样本。涵盖多种任务，如常识问答、文本生成等，助力模型在指令理解和生成方面优化。
+> `Alpaca` dataset: Created by Stanford University, generated through fine-tuning models, containing about 52,000 instruction following data samples. It covers various tasks, such as common sense Q&A, text generation, etc., helping models optimize in terms of instruction understanding and generation.
 
 ***
 
-**1.2.2 对话微调**
+**1.2.2 Dialogue Fine-tuning**
 
-对话微调（`Dialogue Tuning`） 是通过多轮对话数据训练模型生成连贯、符合语境的回复，强调对话历史的上下文理解和回复的自然流畅性。其核心在于教会模型处理对话中的逻辑关系、情感表达和角色身份，对话微调的数据集通常包含对话的上下文以及对应的回复。
+Dialogue Fine-tuning (`Dialogue Tuning`) is to train models to generate coherent, contextual responses through multi-turn dialogue data, emphasizing the understanding of dialogue history context and the naturalness and fluency of responses. Its core is to teach the model to handle logical relationships, emotional expressions, and role identities in dialogues. Dialogue fine-tuning datasets typically include the context of the dialogue and the corresponding responses.
 
 ```javascript
 [
@@ -87,244 +87,229 @@ icon: book-atlas
 ]
 ```
 
-对话微调数据集的核心特点：包含多轮对话上下文、标注角色身份，注重回复连贯性与逻辑性。通过这样的数据，模型可以学习到在不同对话场景下如何生成合适的回复，从而提高对话的连贯性和相关性。对话微调常见的业务场景：
+The core features of dialogue fine-tuning datasets: containing multi-turn dialogue context, annotated role identities, focusing on response coherence and logic. Through such data, the model can learn how to generate appropriate responses in different dialogue scenarios, thereby improving the coherence and relevance of dialogues. Common business scenarios for dialogue fine-tuning:
 
-* **智能客服系统**：提升客服机器人在处理用户咨询时的对话能力，能够更准确地理解用户意图并提供解决方案。
-* **聊天机器人**：让聊天机器人更自然地与用户进行多轮对话，提高用户体验。
-* **语音助手**：优化语音助手在语音交互中的对话表现，使其更符合用户的期望。
+* **Intelligent Customer Service Systems**: Improve the dialogue ability of customer service robots in handling user inquiries, more accurately understanding user intentions and providing solutions.
+* **Chatbots**: Make chatbots more naturally engage in multi-turn conversations with users, improving user experience.
+* **Voice Assistants**: Optimize voice assistants' dialogue performance in voice interactions, making them more in line with user expectations.
 
-对话微调典型开源数据集：
+Typical open-source datasets for dialogue fine-tuning:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmIxOTIyZDQ1MTg3ZTg5ZDFlODFmNTUzZDdhMTIxYzRfSVFZbHhqT2JKRjhkU3pidktrV1VkQlJqMmljM0JCazRfVG9rZW46TGFnV2JYdEV4b3ByRTZ4dVRXNmNYRGtSbjlmXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-> 一个用于训练对话模型的多语言问答数据集，其内容结构和风格符合 ShareGPT 对话格式，数据集中的每个样本为一个对话轮次，包含人类提问和模型回答，数据覆盖多语言（英语、西班牙语、中文、俄语等）和多样化领域。
+> A multilingual Q&A dataset for training dialogue models, with content structure and style conforming to the ShareGPT dialogue format. Each sample in the dataset is a dialogue turn, including human questions and model answers. The data covers multiple languages (English, Spanish, Chinese, Russian, etc.) and diverse domains.
 
 ***
 
-**1.2.3 领域适配**
+**1.2.3 Domain Adaptation**
 
-领域适配（`Domain Adaptation`）是指将模型在特定领域的数据上进行微调，使其更好地适应特定领域的任务和需求。
+Domain Adaptation refers to fine-tuning models on data from specific domains to better adapt them to tasks and requirements in those specific domains.
 
 ```json
 [
   {
-    "instruction": "分析患者的症状描述",
-    "input": "55岁男性，持续性胸骨后疼痛3小时，含服硝酸甘油无效",
-    "output": "可能诊断：急性心肌梗死（STEMI），建议立即行心电图检查及心肌酶谱检测",
-    "domain": "医疗"
+    "instruction": "Analyze the patient's symptom description",
+    "input": "55-year-old male, persistent retrosternal pain for 3 hours, nitroglycerin sublingual ineffective",
+    "output": "Possible diagnosis: Acute myocardial infarction (STEMI), recommend immediate ECG examination and myocardial enzyme profile test",
+    "domain": "Medical"
   },
   {
-    "instruction": "解释法律条款",
-    "input": "《民法典》第1032条",
-    "output": "该条款规定自然人享有隐私权，任何组织或个人不得以刺探、侵扰、泄露、公开等方式侵害他人隐私权",
-    "domain": "法律"
+    "instruction": "Explain legal provisions",
+    "input": "Article 1032 of the Civil Code",
+    "output": "This provision stipulates that natural persons enjoy the right to privacy, and no organization or individual may infringe upon others' privacy rights by means of spying, harassment, disclosure, publication, etc.",
+    "domain": "Legal"
   },
   ...
 ]
 ```
 
-领域适配数据集的核心特点：领域术语标注（如医学本体库、法律术语库）、复杂规则建模（如药物相互作用、合同条款逻辑）、场景化数据增强（如模拟问诊对话、合同审查流程）；领域适配典型的业务场景：
+Core features of domain adaptation datasets: domain terminology annotation (such as medical ontology library, legal terminology library), complex rule modeling (such as drug interactions, contract clause logic), scenario-based data augmentation (such as simulated medical consultation dialogues, contract review processes); Typical business scenarios for domain adaptation:
 
-* **医疗领域适配**：用于病历分析、疾病诊断辅助、医疗文献检索等。
-* **法律领域适配**：辅助法律文件分析、案例检索、合同审查等。
-* **金融领域适配**：用于风险评估、市场分析报告生成、金融产品推荐等。
+* **Medical Domain Adaptation**: Used for medical record analysis, disease diagnosis assistance, medical literature retrieval, etc.
+* **Legal Domain Adaptation**: Assist in legal document analysis, case retrieval, contract review, etc.
+* **Financial Domain Adaptation**: Used for risk assessment, market analysis report generation, financial product recommendation, etc.
 
-领域适配典型开源数据集：
+Typical open-source datasets for domain adaptation:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=ODQxNjI5NzIzYmU2ZWIyYjEzM2NmZWRhZmFmODQxMmNfOHdNQUJZaDcxZkhXOWpUNmJRNVVHOGFuWmdvZ0FwNUlfVG9rZW46SlV2aWJDWGNmb1JBakl4UVpZS2N0RmNhbk5GXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-> 基于 `PubMed` 文献的医学问答数据集，包含医学研究相关问题，适合医疗信息抽取与领域适配任务。
+> A medical Q&A dataset based on `PubMed` literature, containing medical research-related questions, suitable for medical information extraction and domain adaptation tasks.
 
 ***
 
-**1.2.4 文本分类**
+**1.2.4 Text Classification**
 
-文本分类（`Text Classification`），是自然语言处理中的一个经典任务，目的就是通过标注数据训练模型对文本进行类别预测或标签分配。这类任务需要模型理解文本语义与类别特征的关系，适用于需要结构化输出的场景。
+Text Classification is a classic task in natural language processing, with the purpose of training models to predict categories or assign labels to text through annotated data. This type of task requires the model to understand the relationship between text semantics and category features, and is suitable for scenarios that require structured output.
 
 ```json
 [
-  {"text": "这款手机续航长达48小时，拍照效果惊艳", "label": "positive"},
-  {"text": "系统频繁卡顿，客服响应速度慢", "label": "negative"},
-  {"text": "量子计算机突破新型纠错码技术", "label": "science_news"},
-  {"text": "央行宣布下调存款准备金率0.5个百分点", "label": "finance_news"}
+  {"text": "This phone has a battery life of up to 48 hours, and the photo effect is amazing", "label": "positive"},
+  {"text": "The system frequently stutters, and the customer service response is slow", "label": "negative"},
+  {"text": "Quantum computers breakthrough in new error correction code technology", "label": "science_news"},
+  {"text": "The central bank announced a 0.5 percentage point reduction in the reserve requirement ratio", "label": "finance_news"}
 ]
 ```
 
-文本分类微调的典型业务场景：
+Typical business scenarios for text classification fine-tuning:
 
-* **情感分析**：商品评论情感极性识别（正面/负面/中性）
-* **内容审核**：检测违规内容（涉政/暴力/广告）
-* **新闻分类**：自动归类至财经/科技/体育等栏目
-* **意图识别**：用户query分类（咨询/投诉/比价）
+* **Sentiment Analysis**: Product review sentiment polarity recognition (positive/negative/neutral)
+* **Content Moderation**: Detecting inappropriate content (political/violent/advertising)
+* **News Classification**: Automatic categorization into finance/technology/sports sections
+* **Intent Recognition**: User query classification (inquiry/complaint/price comparison)
 
-文本分类典型开源数据集：
+Typical open-source datasets for text classification:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=NjAyNTM3MGVhYTg4NjAwMDlkMDMzOTNiNGM2N2FkZWRfYjU3WnNJN0NicUxZQkY1WDBrVlNOZmZsWlRzdG1WTTlfVG9rZW46V0NiZGI2Y21hb0VaY1Z4aFpDZ2MxVUJWbnJMXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-> `imdb` 大型电影评论数据集，包含用户评论到电影评分的映射关系，适用于对评论进行积极、负面分类的微调任务。
+> `imdb` Large Movie Review Dataset, containing the mapping relationship from user reviews to movie ratings, suitable for fine-tuning tasks to classify reviews as positive or negative.
 
 ***
 
-**1.2.5 模型推理微调**
+**1.2.5 Model Reasoning Fine-tuning**
 
-对于推理模型的微调其实是监督微调的一种特殊形式，通过在数据集中显式标注思维链（`Chain of Thought, COT`），训练模型不仅给出最终答案，还能生成逻辑推导过程。其核心在于让模型学会「分步思考」，适用于需要复杂逻辑推理的场景（如数学证明、代码调试）。在用于推理模型微调的数据集中，通常需要额外包含模型思考过程的部分：
+Fine-tuning reasoning models is actually a special form of supervised fine-tuning. By explicitly annotating the chain of thought (`Chain of Thought, COT`) in the dataset, the model is trained not only to provide the final answer but also to generate the logical reasoning process. The core lies in enabling the model to learn "step-by-step thinking", applicable to scenarios requiring complex logical reasoning (e.g., mathematical proofs, code debugging). In datasets used for reasoning model fine-tuning, it is usually necessary to additionally include the model's thought process:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=NjdhMzc0ZWJmOGVjN2YyNTA4NDJmZGRjNzllYmU0NzNfVFRKMVhJSFE5alE0NkJ1eEVFRktDTld5anhCTzdJN01fVG9rZW46UDJJNGJITDZSb1VRTmh4RndwdWNFMkVvbnFiXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
 ```json
 [
   {
-    "instruction": "解决数学应用题",
-    "input": "小明买了3支铅笔，每支2元；又买了5本笔记本，每本比铅笔贵4元。总花费多少？",
+    "instruction": "Solve a math application problem",
+    "input": "Xiao Ming bought 3 pencils, each costing 2 yuan; he also bought 5 notebooks, each costing 4 yuan more than a pencil. How much did he spend in total?",
     "chain_of_thought": [
-      "铅笔单价：2元/支 → 3支总价：3×2=6元",
-      "笔记本单价：2+4=6元/本 → 5本总价：5×6=30元",
-      "合计花费：6+30=36元"
+      "Pencil price: 2 yuan/each → 3 pencils total price: 3×2=6 yuan",
+      "Notebook price: 2+4=6 yuan/each → 5 notebooks total price: 5×6=30 yuan",
+      "Total cost: 6+30=36 yuan"
     ],
-    "output": "总花费为36元"
+    "output": "The total cost is 36 yuan"
   },
   ...
 ]
 ```
 
-注意：其实并不是所有任务都适合用推理模型，因为推理模型的幻觉比较大，有些情况选择推理模型反而会起到相反的效果，在处理简单明确的任务时，推理模型可能会把问题复杂化，导致思考过度、响应较慢，甚至增加幻觉的风险。比如如果你让推理模型去完成检索、解释类的任务时，当它找不到可以参考的信息就会按照自己的思考过程进行输出，结果并不一定准确。下面则是一些适合用于推理模型微调的场景：
+Note: Not all tasks are suitable for reasoning models, as reasoning models are prone to hallucinations. In some cases, using reasoning models may have counterproductive effects. When handling simple and straightforward tasks, reasoning models may overcomplicate problems, leading to overthinking, slower responses, and even increased hallucination risks. For example, if you ask a reasoning model to perform retrieval or explanation tasks, when it cannot find reference information, it will generate output based on its own reasoning process, which may not be accurate. The following are scenarios suitable for reasoning model fine-tuning:
 
-* **代码生成与调试**：推理模型能够理解复杂的编程问题，生成高效的代码解决方案，并辅助开发人员进行代码调试。
-* **数学问题求解**：在数学建模、复杂计算和逻辑推理任务中，推理模型表现出色，能够提供详细的解题步骤和准确的答案。
-* **复杂数据分析**：推理模型擅长处理需要多步骤推理和策略规划的复杂数据分析任务，帮助科学家和研究人员进行更深入的数据挖掘。
-* **法律与金融分析**：在处理法律合同、金融协议等复杂文档时，推理模型能够提取关键条款，理解模糊信息，辅助决策。
-* 数据集中的思维链，在某些特定场景下可能比较容易获取，比如在数学推理任务的微调上，一般数据集本身带的解题过程就可以作为思维链，比如下面的数学解题数据集：
+* **Code Generation and Debugging**: Reasoning models can understand complex programming problems, generate efficient code solutions, and assist developers in code debugging.
+* **Mathematical Problem Solving**: In mathematical modeling, complex calculations, and logical reasoning tasks, reasoning models excel at providing detailed problem-solving steps and accurate answers.
+* **Complex Data Analysis**: Reasoning models are adept at handling complex data analysis tasks requiring multi-step reasoning and strategic planning, aiding scientists and researchers in deeper data mining.
+* **Legal and Financial Analysis**: When processing complex documents like legal contracts and financial agreements, reasoning models can extract key clauses, interpret ambiguous information, and assist decision-making.
+* The chain of thought in datasets may be relatively easy to obtain in specific scenarios. For example, in mathematical reasoning task fine-tuning, the problem-solving process inherently present in the dataset can serve as the chain of thought, such as in the following mathematical problem-solving dataset:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=M2VmYTM4MzI3YjU1ZDFmYWRiMWE3YmYwMWJmMjA5NzlfQmViakxzcHNCYW9xWjBmSlB2T1o0NUFYcWRiMU01cllfVG9rZW46UmFZemJENjBjb0VWQzF4eW9EM2N2TDBObkJkXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-> 约 86 万道中国高中数学练习题、以及美国和国际数学奥林匹克竞赛的题目，每个问题的解答都采用了思维链（CoT）的格式。
+> Approximately 860,000 Chinese high school math practice problems, as well as problems from American and international math Olympiads, with each problem's solution presented in the chain of thought (CoT) format.
 
-还有就是靠带推理能力的大模型蒸馏获取，通过 `DeepSeek-R1` 等推理模型蒸馏而来。
+Another approach is through distillation from large models with reasoning capabilities, such as those derived from `DeepSeek-R1` and other reasoning models.
 
 ***
 
-#### 1.3 知识蒸馏
+#### 1.3 Knowledge Distillation
 
-知识蒸馏（`Knowledge Distillation`）是将复杂模型（教师模型）的知识迁移到轻量级模型（学生模型）的技术，通过优化学生模型使其输出接近教师模型的“软标签”，从而在保持性能的同时降低推理成本。模型蒸馏的数据集构造应该是最简单的，在你完全信任大模型输出的条件下，你可以直接将大模型产出的问答对作为数据集，最后在进行人工的质量评估和验证即可。模型蒸馏典型开源数据集：
+Knowledge Distillation (`Knowledge Distillation`) is a technique that transfers knowledge from complex models (teacher models) to lightweight models (student models). By optimizing student models to produce outputs close to the teacher models' "soft labels", it reduces inference costs while maintaining performance. Constructing model distillation datasets should be the simplest scenario - when you fully trust the large model's outputs, you can directly use its generated Q&A pairs as the dataset, followed by manual quality assessment and validation. Typical open-source model distillation datasets:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDIyODM2MjQ0YWMwZDY5OWQyNDAwZjljYWUyZGE1ZjVfSFltaFliazNkSmFQWWFPZWZPTktKRzUwMWNQS3hobEZfVG9rZW46Slo1cWJwdWhWb2tTV3J4bjZUdWNQZDZmbm9lXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-> 中文基于满血 DeepSeek-R1 蒸馏数据集，数据集中不仅包含 math 数据，还包括大量的通用类型数据，总数量为 110K。
+> Chinese dataset distilled from full-capability DeepSeek-R1, containing not only math data but also extensive general-purpose data, totaling 110K entries.
 
 ***
 
-#### 1.4 其他微调技术
+#### 1.4 Other Fine-tuning Techniques
 
-**1.4.1 强化学习微调**
+**1.4.1 Reinforcement Learning Fine-tuning**
 
-强化学习微调是在监督微调的基础上，通过人类来主动反馈优化模型生成质量的方法。其核心在于引入奖励模型（`Reward Model`）评估生成结果的合理性，并通过强化学习策略（如 `PPO` 算法）调整模型参数，使生成内容更符合人类偏好。
+Reinforcement learning fine-tuning builds upon supervised fine-tuning by actively incorporating human feedback to optimize model generation quality. Its core lies in introducing reward models (`Reward Model`) to evaluate the rationality of generated results and adjusting model parameters through reinforcement learning strategies (e.g., `PPO` algorithm) to make outputs better align with human preferences.
 
 ```json
 [
   {
-    "input": "请推荐一部科幻电影",
-    "output": "《星际穿越》是一部经典科幻片，探讨了时间与亲情。",
-    "reward_score": 4.5  // 人类标注的质量评分（0-5分）
+    "input": "Recommend a science fiction movie",
+    "output": "Interstellar is a classic science fiction film that explores time and family.",
+    "reward_score": 4.5  // Human-annotated quality score (0-5)
   },
   {
-    "input": "解释黑洞理论",
-    "output": "黑洞是由暗物质构成的神秘天体，会吞噬一切物质。",
-    "reward_score": 2.0  // 包含错误信息，得分低
+    "input": "Explain black hole theory",
+    "output": "Black holes are mysterious celestial bodies composed of dark matter, consuming all matter.",
+    "reward_score": 2.0  // Contains incorrect information, low score
   }
 ]
 ```
 
-强化学习微调的典型业务场景：
+Reinforcement learning fine-tuning is typically applied in the following business scenarios:
 
-* **对话系统优化**：在监督微调完回复相关性后，继续对齐人类价值观（安全、无害、有用性）。
-* **内容生成**：在监督微调完写作能力后，继续优化输出风格（如幽默、正式）或避免敏感信息。
-* **代码生成**：在监督微调完代码生成能力后，继续优化代码的可读性和正确性。
+* **Dialogue System Optimization**: After supervised fine-tuning for relevance, further align the model with human values (safety, harmlessness, usefulness).
+* **Content Generation**: After supervised fine-tuning for writing ability, further optimize output style (e.g., humor, formality) or avoid sensitive information.
+* **Code Generation**: After supervised fine-tuning for code generation ability, further optimize code readability and correctness.
 
-强化学习典型开源数据集：
+Typical open-source reinforcement learning datasets:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=MDI4MDEwNDMxNTA5ZmNhN2NlYWI5OTNjMTY0NWFlMGVfUkk1b05uOWVYUEY4UzdLUHF4RVdWRTBZczN6Zzdnb2hfVG9rZW46SDJEM2I3RFc3b2g2WVp4WUFEc2MwNVVxbjllXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-> 人类偏好排序数据集，用于强化学习微调、训练奖励模型。
+> Human preference ranking dataset for reinforcement learning fine-tuning and training reward models.
 
 ***
 
-**1.4.2 多模态微调**
+**1.4.2 Multimodal Fine-tuning**
 
-多模态微调（`Multimodal Fine-Tuning`）指通过文本、图像、语音等多模态数据训练模型，使其具备跨模态理解与生成能力。它和文本类模型的微调可以说是并列的两个范畴，其中也包括监督/非监督微调、强化学习微调等范畴。
+Multimodal fine-tuning (`Multimodal Fine-Tuning`) refers to training models with multiple modalities (text, images, audio, etc.) to enable cross-modal understanding and generation capabilities. This is a parallel category to text-based model fine-tuning, also encompassing supervised/unsupervised fine-tuning, reinforcement learning fine-tuning, and other categories.
 
 ```json
 [
   {
-    "text": "一只猫在追蝴蝶",
+    "text": "A cat is chasing a butterfly",
     "image_url": "https://example.com/cat.jpg",
-    "caption": "一只橘色的猫正在追逐花园里的白色蝴蝶"
+    "caption": "An orange cat is chasing a white butterfly in the garden"
   },
   {
     "audio": "audio.wav",
-    "text": "会议录音转写：今天的议题是...",
-    "summary": "会议讨论了Q3销售目标与市场策略"
+    "text": "Transcription of meeting recording: Today's agenda is...",
+    "summary": "The meeting discussed Q3 sales targets and market strategies"
   }
 ]
 ```
 
-注意这里的图片、视频、音频等多模态数据可以是 CND 地址、base64 编码，或者直接放在 HuggingFace 上，这里写相对路径，总之在训练时能够读取的到就可以。多模态微调的典型业务场景：
+Note that the image, video, and audio data can be in the form of URLs, base64 encoding, or stored directly on Hugging Face. The key is that the data can be read during training.
 
-* **图文问答**：输入图片和问题，生成答案。
-* **视频内容理解**：分析视频帧和字幕，生成摘要。
-* **跨模态检索**：根据文本描述搜索相关图像/视频。
-* 多模态微调典型开源数据集：
+Multimodal fine-tuning is typically applied in the following business scenarios:
+
+* **Image-Text Question Answering**: Input images and questions, generate answers.
+* **Video Content Understanding**: Analyze video frames and subtitles, generate summaries.
+* **Cross-Modal Retrieval**: Search for relevant images/videos based on text descriptions.
+
+Typical open-source multimodal fine-tuning datasets:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=MDdlYzkzZjU2MGQ0MTQyZmYyYWJjNmY5OWY2ZmY2NWJfUk8wRVhXRWt2elFTNGthMFNsZUhKUmpuNHM2V2E3S29fVG9rZW46Qmh1R2JUZThZb2U5bXN4UThTbWNPV1BzbllsXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-> 包含 50 个大规模视觉语言训练数据集（仅训练集），用于多任务视觉语言模型的微调。数据集结构包含 `images`（图片列表）和`texts`（对话文本），其中对话以用户提问、模型回答的形式呈现，覆盖问答、选择等任务（如TQA数据集示例）。
+> A collection of 50 large-scale visual language training datasets (only training sets), used for multimodal vision-language model fine-tuning. The dataset structure includes `images` (image list) and `texts` (dialogue text), with dialogues presented in a user-question, model-answer format, covering tasks like TQA (Text-Image Question Answering).
 
 ***
 
-### 二、微调数据集的常用格式
+### Two, Common Data Formats for Fine-tuning
 
-对于模型微调的数据集，是没有明确的格式要求的，我们一般在代码中抹除各种微调数据集格式的差异，我们还拿之前微调实战教程中的代码来举例，回顾一下之前我们是怎么处理数据集的。我们先来看第一段代码：
+There is no specific format requirement for model fine-tuning datasets. We generally eliminate differences in various fine-tuning dataset formats in the code. Let's review the code from the previous fine-tuning tutorial:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=NzRlNGQ2NDE1YzkzMDI1NzVkNTJmOTdmNGFlYWM3MDVfTERTazI0VlNuRlplb1lZanowSmNqSkNVMWxHdmpWTXNfVG9rZW46Wm0yZGJoTXR1b3BpR1J4bENWemNPTzlkbnF3XzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
-这段代码其实就是在定义一个用于格式化微调数据集的模版，其中的三个 "{}" 其实就是对应的我们要传入的三个变量，分别对应原始问题、思考过程、最终答案三个部分。然后我们再来看下面这段代码，也很好理解，就是提取出我们原始数据集里面的三个变量：
-
-<figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=OWZiY2EzOWNiMGE4M2E5OTRjMjU0NjFjMTNmYTIwNmZfTW1sVWV0aHd1U3J1VFE0VDNRYWRWRHh2bGI3VDNWdUpfVG9rZW46RHNpUGJYTGZHb2JFYW14TXNhRGNnRnQybmVkXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
-
-然后循环原始数据集，将这三个变量传入上面的模版，最终导入到一个 `text` 变量里。回顾一下我们之前的一个数据集格式：
-
-<figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=Mzk0YzY1NTQ3YzQ3NzYyYzczZTMyYzMyOTExYjk1MDNfYm1HaFdrbFZ2VW9YWmFkS0dGcHFiQU5VT1ZjR3BlR3VfVG9rZW46QmJQMWI5V1JZb200aGd4NHdUcmNRa0V5bjFzXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
-
-调用上面的模版，每条数据集其实就转换成了下面这种格式：
-
-<figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=YTlhNDI1MmVjNTIyYmVhYzQ0ODM5ZjQzZTFkYTZhZWVfN1p2c1RTVWxreG9NUnBXMW56MmJtTVNqd0FPVExPcDVfVG9rZW46R21xMWJqZ2xmb2plOXV4NjQ2VmM2dEl3bm1kXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
-
-最终所有数据集合并完，其实最终就是一个字符串数组：
-
-<figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=YzhkNzEwNTVmN2UyNzQ4MDhkZGE5MjcwZWE0OGE5NTlfT1o3TTJEejdiVDZvNXo4Tk51eU1scU9RUXN6MllYZnpfVG9rZW46VlEyVmJxOHhYb2RHeXh4elJBeGNtellDblBlXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
-
-我们最后在回顾下微调模型的参数，其中有两个重要的参数：
-
-<figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDU4MWYwNGYxZmM4NmNlZmE5Njc4OWZmYjkxYWRkYWRfWDRjU0JSSWd1bXVBRENrWU95TThpQ21vZmlIektpRHNfVG9rZW46UUNzYmJicXBCb292aVl4a2tnTGNjWHl2bnRjXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
-
-所以其实最后喂给模型的还是一段格式化好的字符串，并非结构化的数据。
+This code defines a template for formatting fine-tuning datasets, where the three "{}" represent the three variables to be passed in, corresponding to the original problem, thought process, and final answer, respectively.
 
 ***
 
 #### 2.1 Alpaca
 
-`Alpaca` 最初是斯坦福大学于 2023 年发布的 **52k 条指令微调数据集**，由 `OpenAI` 的 `text-davinci-003` 模型生成，旨在通过指令跟随（`Instruction Following`）任务优化大语言模型（如 `LLaMA`）的性能。后续随着社区的发展，Alpaca 的 JSON 结构逐渐被抽象为一种 **通用数据格式**，并且扩展了一些字段如 `system`（系统提示）和 `history`（历史对话），支持多轮交互任务。适用于多种微调场景，很多主流框架（如 LLaMA-Factory、DeepSpeed）都可以直接加载 `Alpaca` 格式的数据集。这里我们参考 `LLaMA-Factory` 给出的两种在不同微调场景中 `Alpaca` 格式的数据案例：**Alpaca 格式的指令微调数据集**：
+`Alpaca` was initially released by Stanford University in 2023 as a **52k instruction fine-tuning dataset**, generated by `OpenAI`'s `text-davinci-003` model to optimize large language models (like `LLaMA`) through instruction following tasks. Later, with community development, Alpaca's JSON structure evolved into a **universal data format**, extending fields like `system` (system prompts) and `history` (conversation history), supporting multi-turn dialogue tasks. Suitable for various fine-tuning scenarios, many mainstream frameworks (like LLaMA-Factory, DeepSpeed) can directly load `Alpaca`-formatted datasets. Here, we reference two examples of `Alpaca`-formatted datasets in different fine-tuning scenarios from `LLaMA-Factory`:
+
+**Alpaca format for instruction fine-tuning datasets**:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=MjgzNzVmM2NiNGQ3MDkyOGQ3OGFlMDk2M2NlYzcwNmFfUmIxQ25XdGozTkxsQjRDVTBla01wTWtvTTV3ZDVITEZfVG9rZW46VGxJTWJycGtQb041WXZ4dEUzQWNuYm5QbnlmXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
 ***
 
-**Alpaca 格式的领域适配微调数据集**：
+**Alpaca format for domain adaptation fine-tuning datasets**:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=M2ZmNzM3N2UwOGUyNGY5OWQ2MmVkZjM5YTI0ODAxNDZfN0NUdHB5RnViZXBoa1RyOWtyak12UG5SZ1d3V0xpRDdfVG9rZW46TWZDS2JWUTg5bzNiZ0d4NmVNWmN0MzFJbjFxXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
 ***
 
-**Alpaca 格式的偏好数据集**：
+**Alpaca format for preference datasets**:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=NDJiMjNiMzkwOTg2NTYyY2U1ZmJjNmYwNmUyOTEyYTlfWXNaZ3AzMXZVdnFwR0k4MkZmUVljSUd6Yk45MmpmRXZfVG9rZW46QTdWM2JtNnlMb1lmRTd4QXdRb2NzUVRhbm5iXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
@@ -332,88 +317,92 @@ icon: book-atlas
 
 #### 2.2 ShareGPT
 
-**ShareGPT** 最早是一种数据格式标准，由社区设计用于规范多轮对话和工具调用场景的模型训练数据存储方式。其核心目标是通过结构化字段（如 `conversations` 列表、`tools` 工具描述）支持复杂交互（如用户提问 → 工具调用 → 结果整合）。随着格式的普及，社区基于 `ShareGPT` 格式构建了多个具体的数据集，这类数据集被称为 "ShareGPT 格式数据集"。**ShareGPT 格式的指令微调数据集**：
+**ShareGPT** was originally a data format standard designed by the community to normalize model training data storage for multi-turn dialogue and tool invocation scenarios. Its core objective is to support complex interactions (e.g., user query → tool invocation → result integration) through structured fields like `conversations` lists and `tools` descriptions. As the format gained popularity, the community built several specific datasets based on the ShareGPT format, collectively known as "ShareGPT-format datasets".
+
+**ShareGPT-format Instruction Fine-tuning Dataset**:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=NDZmNGJiZTA0MWY2NzcyOTgyZjQ4YWQ0MzQ4NDEzYmNfaTZEVm5lS0N5aTVpNXNRS2g0U3lyRmdpY2hvQ3B4bUtfVG9rZW46SDkzSmJzQXcwb3VEakF4T3RjSGNtTVdYbmFmXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
 ***
 
-**ShareGPT 格式的偏好数据集**：
+**ShareGPT-format Preference Dataset**:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDNkNDcwNTI1ODBhMzkyNGI4MDI1OWMxM2JhYTQ2ZDVfeDdlMVZmSVJzMUZYVVdGenluODhwT1Y2aEQzMkdidTlfVG9rZW46TWppN2JXQ21mb0JUYVN4YnNPMWN5bENPbjhjXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
 ***
 
-**ShareGPT 格式的多模态数据集**：
+**ShareGPT-format Multimodal Dataset**:
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjFkMGRjZjVkYzRkOWEyOWQ2YzA1NTI2NjNkMzlmNDhfaThPZUpoMEZxNEFETGtjb055MERpRmlkR0RqRktpWktfVG9rZW46U3ozOGJXTFdZb05sQWd4bmVWWWNjU09MbmFiXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
 ***
 
-**特殊的 ShareGPT 格式数据集：OpenAI 格式**
+**Special ShareGPT-format Dataset: OpenAI Format**
 
 <figure><img src="https://rncg5jvpme.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjZiMmQ2NGE3Y2QxNDUzNTg5OWVhYTU4ZDFhOTgxY2Nfb1ZvY0sxVjdldzVacTY2T1h0Rjl0VjFSYmQwTjM5VjJfVG9rZW46VFFnVmJLMEFyb1ljZ1V4VGdUVmNmQTFvbmZlXzE3NDcyMjM0MTA6MTc0NzIyNzAxMF9WNA" alt=""><figcaption></figcaption></figure>
 
 ***
 
-#### 2.3 格式对比
+#### 2.3 Format Comparison
 
-下面是两种数据集格式的详细对比，大家可以根据自己的实际需求场景选择合适的格式：
+Below is a detailed comparison between the two dataset formats. You can choose the appropriate format based on your actual requirements:
 
-<table data-header-hidden><thead><tr><th width="146.36328125"></th><th></th><th></th></tr></thead><tbody><tr><td>对比维度</td><td>Alpaca 格式</td><td>ShareGPT 格式</td></tr><tr><td>核心设计目标</td><td>单轮指令驱动任务（如问答、翻译、摘要）</td><td>多轮对话与工具调用（如聊天机器人、API 交互）</td></tr><tr><td>数据结构</td><td>以 <code>instruction</code>、<code>input</code>、<code>output</code> 为主体的 JSON 对象</td><td>以 <code>conversations</code> 列表为核心的多角色对话链（human/gpt/function_call/observation）</td></tr><tr><td>对话历史处理</td><td>通过 <code>history</code> 字段记录历史对话（格式：<code>[["指令", "回答"], ...]</code>）</td><td>通过 <code>conversations</code> 列表顺序自然体现多轮对话（角色交替出现）</td></tr><tr><td>角色与交互逻辑</td><td>仅区分用户指令和模型输出，无显式角色标签</td><td>支持多种角色标签（如 <code>human</code>、<code>gpt</code>、<code>function_call</code>），强制奇偶位置规则</td></tr><tr><td>工具调用支持</td><td>不原生支持工具调用，需通过 <code>input</code> 或指令隐式描述</td><td>通过 <code>function_call</code> 和 <code>observation</code> 显式实现工具调用，支持外部 API 集成</td></tr><tr><td>典型应用场景</td><td>- 指令响应（如 Alpaca-7B） - 领域知识问答 - 文本结构化生成</td><td>- 多轮对话（如 Vicuna） - 客服系统 - 需实时数据查询的交互（如天气、计算）</td></tr><tr><td>优势</td><td>- 结构简洁，任务导向清晰 - 适合快速构建单轮任务数据集</td><td>- 支持复杂对话流与外部工具扩展 - 更贴近真实人机交互场景</td></tr><tr><td>局限</td><td>- 多轮对话需手动拼接 <code>history</code> - 缺乏动态工具交互能力</td><td>- 数据格式更复杂 - 需严格遵循角色位置规则</td></tr></tbody></table>
-
-### 三、微调数据集的不同用途
-
-训练集教会模型「基础知识」，验证集优化「学习方法」，测试集检验「实战能力」，三者如同「预习-复习-考试」的学习闭环，缺一不可：
-
-* **训练集** = **日常练习题**（通过大量练习掌握知识点）
-* **验证集** = **模拟考试卷**（检测阶段学习成果，调整学习方法）
-* **测试集** = **最终期末考试**（检验真实学习能力）
-* **完整集** = **所有可用的习题库**（包含前三者的原始数据全集）
+<table data-header-hidden><thead><tr><th width="146.36328125"></th><th></th><th></th></tr></thead><tbody><tr><td>Comparison Dimension</td><td>Alpaca Format</td><td>ShareGPT Format</td></tr><tr><td>Core Design Purpose</td><td>Single-turn instruction-driven tasks (e.g., Q&A, translation, summarization)</td><td>Multi-turn dialogues and tool invocation (e.g., chatbots, API interactions)</td></tr><tr><td>Data Structure</td><td>JSON objects centered around <code>instruction</code>, <code>input</code>, <code>output</code></td><td>Multi-role dialogue chains (human/gpt/function_call/observation) with <code>conversations</code> list as core</td></tr><tr><td>Dialogue History Handling</td><td>Records history through <code>history</code> field (format: <code>[["instruction", "response"], ...]</code>)</td><td>Naturally represents multi-turn dialogues through ordered <code>conversations</code> list (alternating roles)</td></tr><tr><td>Roles & Interaction Logic</td><td>Only distinguishes user instructions and model outputs, no explicit role labels</td><td>Supports multiple role labels (e.g., <code>human</code>, <code>gpt</code>, <code>function_call</code>), enforces odd-even position rules</td></tr><tr><td>Tool Invocation Support</td><td>No native support, requires implicit description through <code>input</code> or instructions</td><td>Explicit tool invocation through <code>function_call</code> and <code>observation</code>, supports external API integration</td></tr><tr><td>Typical Use Cases</td><td>- Instruction response (e.g., Alpaca-7B) <br>- Domain-specific Q&A <br>- Structured text generation</td><td>- Multi-turn dialogues (e.g., Vicuna) <br>- Customer service systems <br>- Interactions requiring real-time data queries (e.g., weather, calculations)</td></tr><tr><td>Advantages</td><td>- Concise structure, clear task orientation <br>- Suitable for rapid single-turn dataset construction</td><td>- Supports complex dialogue flows and external tool extension <br>- Closer to real human-machine interaction scenarios</td></tr><tr><td>Limitations</td><td>- Requires manual <code>history</code> concatenation for multi-turn dialogues <br>- Lacks dynamic tool interaction capabilities</td><td>- More complex data format <br>- Requires strict adherence to role position rules</td></tr></tbody></table>
 
 ***
 
-#### 3.1 训练集 — 老师教知识
+### Three, Fine-tuning Dataset for Different Purposes
 
-* **作用**：模型学习规律的核心资料
-* **示例**：教AI识别猫时，给它看**10,000张标注好的猫图**（包含不同品种、姿势）
-* **关键点**：
-  * 需覆盖各种可能性（白天/夜晚、近景/远景）
-  * 相当于学生的课本+习题册
+Training sets teach models "basic knowledge", validation sets optimize "learning methods", and test sets evaluate "practical abilities". The three are like a learning cycle of "pre-study, review, and examination", and none can be missing:
 
-***
-
-#### 3.2 验证集 — 学习效果检查
-
-* **作用**：防止死记硬背，测试举一反三能力
-* **典型场景**：训练中途用**2,000张新猫图**验证，发现模型错把「无毛猫」认成狗，于是调整训练策略
-* **核心价值**：
-  * 选择最佳模型版本（如不同神经网络结构）
-  * 调整超参数（相当于改变学习计划表）
+* **Training Set** = **Daily Practice Questions** (master knowledge points through extensive practice)
+* **Validation Set** = **Mock Exam Papers** (detect learning outcomes, adjust learning methods)
+* **Test Set** = **Final Exam** (evaluate real learning abilities)
+* **Complete Set** = **All Available Question Banks** (includes the original data of the above three)
 
 ***
 
-#### 3.3 测试集 — 最终能力考核
+#### 3.1 Training Set — Teacher Teaches Knowledge
 
-* **作用**：评估模型真实水平
-* **必须遵守**：
-  * 绝对隔离原则：测试集的 **5,000张猫图** 在训练中从未出现过
-  * 相当于高考的「绝密押题卷」
-* **常见误区**： 若用测试集反复调参，相当于提前偷看考题，成绩会虚高
-
-***
-
-#### 3.4 完整集 — 数据资源池
-
-* **包含关系**：完整集 = 训练集 + 验证集 + 测试集
-* **划分比例**（示例）：
-  * 常规情况：70%训练 + 15%验证 + 15%测试
-  * 小数据场景：80%训练 + 10%验证 + 10%测试
+* **Role**: Core learning materials for models
+* **Example**: When teaching AI to recognize cats, show it **10,000 labeled cat images** (including different breeds, poses)
+* **Key Points**:
+  * Must cover various possibilities (day/night, close-up/distant)
+  * Equivalent to a student's textbook and exercise book
 
 ***
 
-下面是一些关于这三种数据集的常见问题：
+#### 3.2 Validation Set — Learning Effectiveness Check
 
-* **为什么不能混用？** ：如果测试集数据泄露到训练中，就像考前背答案，实际应用时遇到新题就会失败。
-* **数据不够怎么办？**：交叉验证法：将完整集分成5份，轮流用4份训练、1份验证（类似「轮换座位考试」），合成数据：用图像翻转、文字替换等方式扩充数据量。
-* **特殊场景处理**：时间序列数据：需按时间顺序划分（不能用随机拆分）。例如预测股价，必须用2023年前的数据训练，2024年数据测试；
+* **Role**: Prevents rote memorization, tests ability to generalize
+* **Typical Scenario**: During training, use **2,000 new cat images** to validate, discover the model mistakenly identifies "hairless cats" as dogs, and adjust the training strategy
+* **Core Value**:
+  * Select the best model version (e.g., different neural network structures)
+  * Adjust hyperparameters (equivalent to changing the learning plan)
+
+***
+
+#### 3.3 Test Set — Final Ability Evaluation
+
+* **Role**: Evaluates model's real-world performance
+* **Must Follow**:
+  * Absolute isolation principle: The **5,000 cat images** in the test set have never appeared during training
+  * Equivalent to a highly confidential exam paper
+* **Common Misconceptions**: If the test set is used to repeatedly adjust parameters, it's like cheating on the exam, and the results will be overly optimistic
+
+***
+
+#### 3.4 Complete Set — Data Resource Pool
+
+* **Inclusion Relationship**: Complete set = Training set + Validation set + Test set
+* **Partition Proportion** (example):
+  * General situation: 70% training + 15% validation + 15% testing
+  * Small data scenario: 80% training + 10% validation + 10% testing
+
+***
+
+Below are some frequently asked questions about these three types of datasets:
+
+* **Why can't they be mixed?**: If the test set data leaks into the training set, it's like cheating on the exam, and the model will fail in real-world applications.
+* **What if there's not enough data?**: Cross-validation method: Divide the complete set into 5 parts, rotate 4 parts for training and 1 part for validation (similar to "rotating seats for exams"), and synthesize data: Use image flipping, text replacement, and other methods to expand the data volume.
+* **Special Scenario Handling**: Time series data: Must be divided according to time order (cannot use random splitting). For example, predicting stock prices, you must use data before 2023 for training and data from 2024 for testing;
